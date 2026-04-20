@@ -354,6 +354,14 @@
         color: var(--text);
         font-family: inherit;
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        -moz-appearance: textfield;
+        appearance: textfield;
+      }
+
+      .input-wrap input::-webkit-outer-spin-button,
+      .input-wrap input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
       }
 
       .input-wrap input::placeholder {
@@ -483,6 +491,28 @@
         background: rgba(0, 0, 0, 0.035);
       }
 
+      @keyframes results-container-glow {
+        0% {
+          box-shadow: 0 0 0 rgba(34, 197, 94, 0);
+        }
+        30% {
+          box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.28), 0 0 24px rgba(34, 197, 94, 0.38);
+        }
+        55% {
+          box-shadow: 0 0 0 rgba(34, 197, 94, 0);
+        }
+        78% {
+          box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.22), 0 0 20px rgba(34, 197, 94, 0.3);
+        }
+        100% {
+          box-shadow: 0 0 0 rgba(34, 197, 94, 0);
+        }
+      }
+
+      .results-model-card--final-glow {
+        animation: results-container-glow 1.25s ease-out;
+      }
+
       .results-spectrum-row + .results-spectrum-row {
         margin-top: 16px;
         padding-top: 16px;
@@ -520,6 +550,39 @@
 
       .results-model-bpm span {
         color: var(--accent);
+      }
+
+      @keyframes results-reveal-in {
+        0% {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        58% {
+          opacity: 1;
+          transform: translateY(-4px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .results-reveal {
+        opacity: 0;
+        animation: results-reveal-in 0.78s cubic-bezier(0.22, 1, 0.45, 1) forwards;
+        animation-delay: calc(var(--results-reveal-i, 0) * 0.19s);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .results-reveal {
+          opacity: 1;
+          animation: none;
+          transform: none;
+        }
+
+        .results-model-card--final-glow {
+          animation: none;
+        }
       }
 
       .zone-spectrum-wrap {
@@ -1032,9 +1095,9 @@
             <legend>Calculation</legend>
             <div class="segmented" role="group" aria-label="Calculation method">
               <input type="radio" name="calculationMethod" id="methodKarvonen" value="karvonen" checked />
-              <label for="methodKarvonen">Karvonen</label>
+              <label for="methodKarvonen">Complete</label>
               <input type="radio" name="calculationMethod" id="methodHunt" value="hunt" />
-              <label for="methodHunt">HUNT max HR</label>
+              <label for="methodHunt">Lite</label>
             </div>
           </fieldset>
 
@@ -1450,6 +1513,58 @@
           return Math.max(0, Math.min(100, value));
         }
 
+        /** Stagger fade / soft-bounce for results: BPM line, then each spectrum row (Karvonen, HUNT, etc.). */
+        function applyResultsRevealStagger(container) {
+          if (!container) return;
+          var cards = container.querySelectorAll(".results-model-card");
+          var targets = [];
+          var revealDurationMs = 780;
+          var revealStepDelayMs = 190;
+
+          cards.forEach(function (card) {
+            card.classList.remove("results-model-card--final-glow");
+          });
+
+          if (container._resultsGlowTimer) {
+            clearTimeout(container._resultsGlowTimer);
+            container._resultsGlowTimer = null;
+          }
+
+          cards.forEach(function (card) {
+            var bpm = card.querySelector(".results-model-bpm");
+            var spectrumRows = card.querySelectorAll(".results-spectrum-row");
+            if (bpm) {
+              targets.push(bpm);
+            } else if (spectrumRows.length) {
+              var soloTitle = card.querySelector(".results-model-title");
+              if (soloTitle) targets.push(soloTitle);
+            } else {
+              var noteHeading = card.querySelector(".overlap-main-title");
+              var noteBody = card.querySelector(".results-meta");
+              if (noteHeading) targets.push(noteHeading);
+              if (noteBody) targets.push(noteBody);
+            }
+            spectrumRows.forEach(function (row) {
+              targets.push(row);
+            });
+          });
+          targets.forEach(function (el, i) {
+            el.classList.add("results-reveal");
+            el.style.setProperty("--results-reveal-i", String(i));
+          });
+
+          var zone2Heading = container.querySelector(".overlap-main-title");
+          var glowCard = zone2Heading ? zone2Heading.closest(".results-model-card") : cards[0];
+          if (!glowCard) return;
+
+          var revealTotalMs = revealDurationMs + Math.max(targets.length - 1, 0) * revealStepDelayMs;
+          container._resultsGlowTimer = setTimeout(function () {
+            glowCard.classList.remove("results-model-card--final-glow");
+            void glowCard.offsetWidth;
+            glowCard.classList.add("results-model-card--final-glow");
+          }, revealTotalMs + 80);
+        }
+
         function appendZoneSpectrumRow(host, rowModel, rowOpts) {
           var ro = rowOpts || {};
 
@@ -1709,6 +1824,9 @@
           var visitorFooter = opts.shareVisitorUi === true || urlHasShareAttribution();
           syncResultsModalFooterMode(visitorFooter);
           openResultsModal();
+          requestAnimationFrame(function () {
+            applyResultsRevealStagger(resultsModels);
+          });
         }
 
         function tryHydrateResultsFromUrl() {
