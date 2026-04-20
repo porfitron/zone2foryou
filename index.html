@@ -93,6 +93,19 @@
         padding-bottom: max(24px, env(safe-area-inset-bottom));
       }
 
+      .site-footer {
+        margin-top: 18px;
+        text-align: center;
+      }
+
+      .site-footer-copy {
+        margin: 0;
+        font-size: 0.8125rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        letter-spacing: 0.01em;
+      }
+
       .glass {
         background: var(--bg-elevated);
         backdrop-filter: blur(24px);
@@ -908,7 +921,7 @@
             </svg>
           </button>
         </header>
-        <p class="subtitle">From your age, resting HR, and max HR (measured or estimated).</p>
+        <p class="subtitle">From your age, resting and max heart rates.</p>
 
         <form id="calcForm" novalidate>
           <fieldset>
@@ -956,6 +969,9 @@
           <button type="submit" class="primary-btn">Calculate Zone 2</button>
         </form>
       </main>
+      <footer class="site-footer" role="contentinfo">
+        <p class="site-footer-copy">&copy; 2026 HatchAndScale.co</p>
+      </footer>
     </div>
 
     <div class="results-modal-backdrop" id="resultsModalBackdrop" aria-hidden="true">
