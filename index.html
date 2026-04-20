@@ -34,7 +34,8 @@
     <meta name="twitter:title" content="Zone2ForYou™ — Zone 2 heart rate range" />
     <meta name="twitter:description" content="Estimate your Zone 2 heart rate range from age, resting heart rate, and training method." />
     <meta name="twitter:image" content="https://zone2foryou.com/icon-512.png" />
-    <meta name="theme-color" content="#f2f2f7" />
+    <meta name="theme-color" content="#f4efe6" />
+    <meta name="theme-color" content="#161620" media="(prefers-color-scheme: dark)" />
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-95GMLXCSTF"></script>
     <script>
@@ -51,7 +52,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
       :root {
-        --bg: #f2f2f7;
+        --bg: #f4efe6;
+        --bg-footer-scrim: rgba(244, 239, 230, 0.92);
         --bg-elevated: rgba(255, 255, 255, 0.72);
         --border-glass: rgba(255, 255, 255, 0.3);
         --shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
@@ -715,7 +717,7 @@
       .results-modal-footer {
         flex-shrink: 0;
         padding: 12px 24px max(16px, env(safe-area-inset-bottom));
-        background: rgba(242, 242, 247, 0.92);
+        background: var(--bg-footer-scrim);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         border-top: 1px solid rgba(0, 0, 0, 0.06);
@@ -899,6 +901,108 @@
       .toast.show {
         opacity: 1;
         transform: translateX(-50%) translateY(0);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #161620;
+          --bg-footer-scrim: rgba(22, 22, 32, 0.92);
+          --bg-elevated: rgba(34, 34, 44, 0.88);
+          --border-glass: rgba(255, 255, 255, 0.1);
+          --shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+          --text: #ebebf0;
+          --text-secondary: #98989f;
+          --accent-muted: rgba(52, 199, 89, 0.22);
+        }
+
+        .icon-btn {
+          background: rgba(255, 255, 255, 0.08);
+        }
+
+        .icon-btn:hover {
+          background: rgba(255, 255, 255, 0.12);
+        }
+
+        .segmented {
+          background: rgba(255, 255, 255, 0.06);
+        }
+
+        .segmented input:checked + label {
+          background: rgba(255, 255, 255, 0.14);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+        }
+
+        .bpm-info-btn {
+          border-color: rgba(255, 255, 255, 0.18);
+          background: rgba(255, 255, 255, 0.06);
+        }
+
+        .bpm-info-btn:hover {
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        .input-wrap input {
+          border-color: rgba(255, 255, 255, 0.12);
+          background: rgba(255, 255, 255, 0.08);
+        }
+
+        .results-model-card {
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        .results-spectrum-row + .results-spectrum-row {
+          border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .zone-spectrum-track {
+          background: rgba(255, 255, 255, 0.12);
+        }
+
+        .zone-spectrum-segment {
+          border-right-color: rgba(0, 0, 0, 0.35);
+        }
+
+        .zone2-highlight {
+          box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+        }
+
+        .zone2-callout::before {
+          background: rgba(255, 255, 255, 0.35);
+        }
+
+        .disclaimer {
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        .secondary-btn {
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        .secondary-btn:hover {
+          background: rgba(255, 255, 255, 0.14);
+        }
+
+        .results-modal-footer {
+          border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .results-mobile-ad-placeholder {
+          border-color: rgba(255, 255, 255, 0.16);
+          background: rgba(255, 255, 255, 0.04);
+        }
+
+        .modal {
+          background: #1e1e28;
+          box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55);
+        }
+
+        .modal p {
+          color: var(--text-secondary);
+        }
+
+        .modal a:hover {
+          filter: brightness(1.08);
+        }
       }
     </style>
   </head>
