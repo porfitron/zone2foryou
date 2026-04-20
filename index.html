@@ -13,25 +13,25 @@
       })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="ZoneYou&trade; — estimate your Zone 2 heart rate range from age, resting heart rate, and training method." />
-    <title>ZoneYou&trade;</title>
+    <meta name="description" content="Zone2ForYou&trade; — estimate your Zone 2 heart rate range from age, resting heart rate, and training method." />
+    <title>Zone2ForYou&trade;</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="manifest" href="site.webmanifest" />
     <link rel="canonical" href="https://zone2foryou.com" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="ZoneYou" />
+    <meta property="og:site_name" content="Zone2ForYou" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:url" content="https://zone2foryou.com" />
-    <meta property="og:title" content="ZoneYou — Zone 2 heart rate range" />
+    <meta property="og:title" content="Zone2ForYou™ — Zone 2 heart rate range" />
     <meta property="og:description" content="Estimate your Zone 2 heart rate range from age, resting heart rate, and training method." />
     <meta property="og:image" content="https://zone2foryou.com/icon-512.png" />
     <meta property="og:image:width" content="512" />
     <meta property="og:image:height" content="512" />
-    <meta property="og:image:alt" content="ZoneYou — Zone 2 heart rate calculator" />
+    <meta property="og:image:alt" content="Zone2ForYou™ — Zone 2 heart rate calculator" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="ZoneYou — Zone 2 heart rate range" />
+    <meta name="twitter:title" content="Zone2ForYou™ — Zone 2 heart rate range" />
     <meta name="twitter:description" content="Estimate your Zone 2 heart rate range from age, resting heart rate, and training method." />
     <meta name="twitter:image" content="https://zone2foryou.com/icon-512.png" />
     <meta name="theme-color" content="#f2f2f7" />
@@ -895,8 +895,7 @@
         <header class="panel-head">
           <h1 class="card-title-line">
             <span class="brand brand--inline">
-              <span class="brand-name">ZoneYou&trade;</span>
-              <span class="brand-tag">HR</span>
+              <span class="brand-name">Zone2ForYou&trade;</span>
             </span>
             <span class="card-title-sep" aria-hidden="true">|</span>
             <span class="card-title-topic">Zone 2 Range</span>
@@ -1501,13 +1500,13 @@
 
             if (hasOverlap) {
               models.push({
-                label: "ZoneYou\u2122 Results (Overlap)",
+                label: "Zone2ForYou\u2122 Results (Overlap)",
                 zone: { low: overlapLow, high: overlapHigh },
                 rhr: data.rhr,
                 mhr: data.mhr,
                 cardOptions: {
                   overlapMainTitle: true,
-                  overlapTitleHtml: "ZoneYou&trade; Results (Overlap)",
+                  overlapTitleHtml: "Zone2ForYou&trade; Results (Overlap)",
                   overlapTitleId: "resultsOverlapHeading",
                   narrowWithinZone2: true,
                   zone2Reference: karvonenZone,
@@ -1515,10 +1514,10 @@
               });
             } else {
               models.push({
-                label: "ZoneYou\u2122 Results (Overlap)",
+                label: "Zone2ForYou\u2122 Results (Overlap)",
                 cardOptions: {
                   mode: "note",
-                  overlapTitleHtml: "ZoneYou&trade; Results (Overlap)",
+                  overlapTitleHtml: "Zone2ForYou&trade; Results (Overlap)",
                   overlapTitleId: "resultsOverlapHeading",
                   noteText:
                     "No overlap between the Karvonen (entered max HR) and HUNT max HR estimates for these inputs. Treat the two model rows below as separate scenarios.",
@@ -1681,7 +1680,7 @@
             var overlapHigh = Math.min(karvonenZ.high, huntZ.high);
             if (overlapLow <= overlapHigh) {
               return (
-                "ZoneYou\u2122 — Zone 2: " +
+                "Zone2ForYou\u2122 — Zone 2: " +
                 overlapLow +
                 "\u2013" +
                 overlapHigh +
@@ -1692,7 +1691,7 @@
               );
             }
             return (
-              "ZoneYou\u2122 — Zone 2: " +
+              "Zone2ForYou\u2122 — Zone 2: " +
               karvonenZ.low +
               "\u2013" +
               karvonenZ.high +
@@ -1707,7 +1706,7 @@
 
           var z = karvonenZone2(data.rhr, data.mhr);
           return (
-            "ZoneYou\u2122 — Zone 2: " +
+            "Zone2ForYou\u2122 — Zone 2: " +
             z.low +
             "\u2013" +
             z.high +
@@ -1727,7 +1726,7 @@
             return;
           }
           var text = buildZoneYouShareText(data);
-          var shareData = { title: "ZoneYou\u2122", text: text };
+          var shareData = { title: "Zone2ForYou\u2122", text: text };
 
           if (navigator.share) {
             navigator.share(shareData).then(
