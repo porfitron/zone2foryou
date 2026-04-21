@@ -1,1379 +1,3418 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zone 2 For You</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..900&display=swap" rel="stylesheet">
-  <style>
-    /* ═══ Tokens: Brand/briefs/z24u-color-system + z24u-typography ═══ */
-    :root {
-      --z1-fill: #7DCCDA;
-      --z2-fill: #00B4D8;
-      --z3-fill: #F9C623;
-      --z4-fill: #F97316;
-      --z5-fill: #E91E8C;
-      --zone-1: var(--z1-fill);
-      --zone-2: var(--z2-fill);
-      --zone-3: var(--z3-fill);
-      --zone-4: var(--z4-fill);
-      --zone-5: var(--z5-fill);
-      --text-on-fill: #1C1814;
-
-      --bg: #161620;
-      --surface: #20202E;
-      --surface-raised: #2A2A3A;
-      --surface-inset: #12121C;
-      --border: #38384A;
-      --border-subtle: #28283A;
-      --text-primary: #F0EBE2;
-      --text-secondary: #9A95A0;
-      --text-tertiary: #5A556A;
-
-      --accent-primary: #00B4D8;
-      --accent-primary-hover: #0096B8;
-      --accent-primary-text: #00B4D8;
-      --accent-primary-light: #B8EEFF;
-      --accent-tint: rgba(0, 180, 216, 0.11);
-      --accent-border: rgba(0, 180, 216, 0.32);
-      --accent-glow: rgba(0, 180, 216, 0.22);
-      --accent-consensus-bg: rgba(0, 180, 216, 0.055);
-
-      --text-display: 40px;
-      --text-heading-1: 28px;
-      --text-heading-2: 22px;
-      --text-heading-3: 18px;
-      --text-body: 16px;
-      --text-label: 14px;
-      --text-small: 12px;
-      --text-micro: 11px;
-
-      --nav-height: 69px;
-      --zstrip-h: 4px;
-      --steps-bar-height: 68px;
-      --site-header-h: calc(var(--nav-height) + var(--zstrip-h) + var(--steps-bar-height));
-      --chart-meta-w: 148px;
-
-      /* Legacy aliases (existing rules) */
-      --t1: var(--text-primary);
-      --t2: var(--text-secondary);
-      --t3: var(--text-tertiary);
-      --ac: var(--accent-primary);
-      --ac-h: var(--accent-primary-hover);
-      --surface-r: var(--surface-raised);
-      --surface-i: var(--surface-inset);
-      --bs: var(--border-subtle);
-      --bm: var(--border);
-      --ac-d: var(--accent-tint);
-      --ac-b: var(--accent-border);
-      --ac-g: var(--accent-glow);
-      --ac-col: var(--accent-consensus-bg);
-      --ac-cb: var(--accent-border);
-    }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{
-      scroll-behavior:smooth;
-      scroll-padding-top:calc(var(--site-header-h) + 12px);
-    }
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-    }
-    body{
-      font-family:'Inter',system-ui,sans-serif;
-      font-size:var(--text-body);
-      line-height:1.5;
-      background:var(--bg);
-      color:var(--text-primary);
-      -webkit-font-smoothing:antialiased;
-    }
-    :focus-visible{
-      outline:2px solid var(--accent-primary);
-      outline-offset:2px;
-    }
-    a:focus-visible, button:focus-visible{outline-offset:3px}
-
-    /* ═══ Sticky site header (nav + zone strip + steps) ═══ */
-    .site-header{
-      position:sticky;top:0;z-index:100;
-      background:var(--bg);
-    }
-    /* ═══ Zone strip ═══ */
-    .zstrip{display:flex;height:var(--zstrip-h);flex-shrink:0}
-    .zstrip div{flex:1}
-
-    /* ═══ Nav ═══ */
-    nav{
-      display:flex;align-items:center;justify-content:center;
-      min-height:var(--nav-height);
-      padding:14px 24px;border-bottom:1px solid var(--border-subtle);
-      background:rgba(22,22,32,.93);
-      backdrop-filter:blur(12px);
-    }
-    .nav-logo{height:40px;width:auto;display:block}
-
-    /* ═══ Steps bar ═══ */
-    .steps-bar{
-      border-bottom:1px solid var(--border-subtle);
-      background:rgba(22,22,32,.95);
-      backdrop-filter:blur(12px);
-    }
-    .steps-inner{
-      max-width:560px;margin:0 auto;
-      padding:14px 24px;
-      display:grid;
-      grid-template-columns:1fr auto 1fr auto 1fr;
-      align-items:start;
-    }
-    .step{
-      display:flex;flex-direction:column;align-items:center;gap:5px;
-      text-decoration:none;justify-self:center;width:100%;
-      max-width:120px;
-    }
-    .step-circle{
-      width:26px;height:26px;border-radius:50%;
-      background:var(--surface-r);border:1.5px solid var(--bm);
-      display:flex;align-items:center;justify-content:center;
-      transition:all .25s;
-    }
-    .step-icon{font-size:var(--text-micro);font-weight:700;color:var(--accent-primary);font-variant-numeric:tabular-nums;letter-spacing:.02em;transition:color .25s}
-    .step-label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);white-space:nowrap;transition:color .25s}
-    /* Current */
-    .step--current .step-circle{border-color:var(--ac);background:var(--ac-d)}
-    .step--current .step-label{color:var(--t1)}
-    /* Done */
-    .step--done .step-circle{background:var(--accent-primary);border-color:var(--accent-primary)}
-    .step--done .step-icon{color:var(--text-on-fill)}
-    .step--done .step-label{color:var(--t2)}
-    /* Connector */
-    .step-conn{
-      height:1px;background:var(--bs);
-      margin-top:12px;min-width:6px;align-self:center;
-      transition:background .3s;
-    }
-    .step-conn--done{background:rgba(0,180,216,.35)}
-
-    /* ═══ Hero ═══ */
-    .hero{padding:clamp(40px,8vw,64px) 24px 48px;text-align:center;max-width:600px;margin:0 auto;scroll-margin-top:var(--site-header-h)}
-    .hero-eyebrow{
-      display:inline-flex;align-items:center;gap:8px;
-      font-size:var(--text-micro);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-primary);margin-bottom:18px;
-    }
-    .hero-eyebrow::before,.hero-eyebrow::after{content:'';display:block;width:24px;height:1px;background:var(--accent-primary);opacity:.5}
-    h1{
-      font-size:clamp(26px,5vw,var(--text-display));
-      font-weight:800;
-      line-height:1.1;
-      letter-spacing:-.02em;
-      color:var(--text-primary);
-      margin-bottom:16px;
-    }
-    @media (min-width: 480px) {
-      h1 { letter-spacing: -0.03em; }
-    }
-    .hero-sub{font-size:clamp(14px,2.5vw,var(--text-body));font-weight:400;color:var(--text-secondary);line-height:1.65;margin-bottom:32px;max-width:440px;margin-left:auto;margin-right:auto}
-    .hero-cta{
-      display:inline-flex;align-items:center;gap:8px;
-      background:var(--accent-primary);color:var(--text-on-fill);
-      font-family:inherit;font-size:15px;font-weight:600;
-      padding:15px 26px;border-radius:12px;text-decoration:none;border:none;cursor:pointer;
-      min-height:44px;
-    }
-    .hero-cta:hover{background:var(--accent-primary-hover)}
-
-    /* ═══ Section wrapper ═══ */
-    .section{max-width:560px;margin:0 auto;padding:0 24px clamp(56px,10vw,80px);scroll-margin-top:calc(var(--site-header-h) + 8px)}
-    .section-header{
-      display:flex;align-items:center;gap:12px;
-      margin-bottom:28px;padding-top:52px;border-top:1px solid var(--border-subtle);
-    }
-    .section-num{
-      font-size:var(--text-micro);font-weight:700;letter-spacing:.08em;font-variant-numeric:tabular-nums;
-      color:var(--text-on-fill);background:var(--accent-primary);
-      width:24px;height:24px;border-radius:6px;
-      display:inline-flex;align-items:center;justify-content:center;
-      flex-shrink:0;
-    }
-    .section-title{font-size:var(--text-heading-2);font-weight:700;letter-spacing:-.01em;color:var(--text-primary)}
-    .section-intro{font-size:var(--text-body);font-weight:400;color:var(--text-secondary);line-height:1.55;margin:-12px 0 22px;max-width:42em}
-    .sep{height:1px;background:var(--bs)}
-
-    /* ═══ Form card ═══ */
-    .form-card{
-      background:var(--surface);border:1px solid var(--bs);
-      border-radius:20px;padding:24px;margin-bottom:20px;
-    }
-    .form-card.hidden{display:none}
-    .form-card h2{font-size:var(--text-heading-3);font-weight:700;color:var(--text-primary);margin-bottom:22px}
-    .fields{display:flex;flex-direction:column;gap:18px}
-    .field{display:flex;flex-direction:column;gap:6px}
-    .field-header{display:flex;align-items:center;justify-content:space-between}
-    .field-label{font-size:var(--text-micro);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-tertiary)}
-    .field-opt{font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ac);background:var(--ac-d);padding:2px 7px;border-radius:100px}
-    .input-row{
-      display:flex;align-items:center;
-      background:var(--surface-r);border:1px solid var(--bm);
-      border-radius:10px;overflow:hidden;transition:border-color .15s;
-    }
-    .input-row:focus-within{border-color:var(--ac)}
-    .field-input{
-      flex:1;background:transparent;border:none;outline:none;
-      font-family:inherit;font-size:20px;font-weight:600;
-      font-variant-numeric:tabular-nums lining-nums;color:var(--t1);
-      padding:11px 14px;min-width:0;
-    }
-    .field-input::placeholder{color:var(--t3);font-weight:400}
-    .field-unit{font-size:13px;font-weight:500;color:var(--t3);padding:0 14px 0 0;white-space:nowrap}
-    .field-hint{font-size:var(--text-small);font-weight:400;color:var(--text-tertiary);line-height:1.5}
-    .form-actions{margin-top:24px}
-    .btn-calc{
-      width:100%;background:var(--accent-primary);color:var(--text-on-fill);border:none;
-      border-radius:12px;font-family:inherit;font-size:15px;font-weight:600;
-      padding:15px;cursor:pointer;margin-bottom:10px;
-      min-height:48px;
-    }
-    .btn-calc:hover{background:var(--accent-primary-hover)}
-    .privacy-note{font-size:var(--text-small);font-weight:400;color:var(--text-tertiary);text-align:center}
-
-    /* ═══ Results card ═══ */
-    #results{display:none}
-    #results.visible{display:block}
-    .results-card{background:var(--surface);border:1px solid var(--bs);border-radius:22px;overflow:hidden}
-
-    .results-hd{padding:20px 24px 14px;border-bottom:1px solid var(--bs)}
-    .results-hd h2{font-size:var(--text-heading-2);font-weight:800;letter-spacing:-.02em;color:var(--text-primary);margin-bottom:4px}
-    .results-hd p{font-size:var(--text-small);font-weight:400;color:var(--text-tertiary)}
-    .inputs-header{padding:14px 24px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-    .inputs-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-right:2px}
-    .chips{display:flex;gap:6px;flex-wrap:wrap}
-    .chip{font-size:11px;font-weight:500;color:var(--t3);background:var(--surface-r);border:1px solid var(--bs);padding:4px 10px;border-radius:100px}
-    .change-inputs{font-size:11px;font-weight:600;color:var(--ac);cursor:pointer;background:none;border:none;font-family:inherit;padding:0;margin-left:4px}
-    .change-inputs:hover{color:var(--ac-h)}
-
-    /* Breakdown: shared chart column via subgrid when supported */
-    .breakdown{padding:16px 24px 0}
-    .breakdown-hd{font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--t3);margin-bottom:10px}
-    .chart-layout{display:block}
-    .chart-corner{display:none}
-    .axis-row{display:flex;height:20px;margin-left:var(--chart-meta-w);position:relative;margin-bottom:2px}
-    .rows-wrap{display:block;position:relative}
-    @media (max-width:420px){
-      :root{--chart-meta-w:118px}
-      .meta{flex:0 0 118px;padding-right:8px}
-      .fn{font-size:12px}
-    }
-    @supports (grid-template-columns:subgrid){
-      .chart-layout{
-        display:grid;
-        grid-template-columns:var(--chart-meta-w) minmax(0,1fr);
-        align-items:stretch;
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      (function () {
+        if (location.protocol !== "http:") return;
+        var host = location.hostname;
+        if (host === "localhost" || host === "127.0.0.1") return;
+        location.replace(
+          "https://" + location.host + location.pathname + location.search + location.hash
+        );
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Zone2ForYou&trade; — estimate your Zone 2 heart rate range from age, resting heart rate, and training method." />
+    <title>Zone2ForYou&trade;</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="canonical" href="https://zone2foryou.com" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Zone2ForYou" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content="https://zone2foryou.com" />
+    <meta property="og:title" content="Zone2ForYou™ — Zone 2 heart rate range" />
+    <meta property="og:description" content="Estimate your Zone 2 heart rate range from age, resting heart rate, and training method." />
+    <meta property="og:image" content="https://zone2foryou.com/icon-512.png" />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:image:alt" content="Zone2ForYou™ — Zone 2 heart rate calculator" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Zone2ForYou™ — Zone 2 heart rate range" />
+    <meta name="twitter:description" content="Estimate your Zone 2 heart rate range from age, resting heart rate, and training method." />
+    <meta name="twitter:image" content="https://zone2foryou.com/icon-512.png" />
+    <meta name="theme-color" content="#f4efe6" />
+    <meta name="theme-color" content="#161620" media="(prefers-color-scheme: dark)" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-95GMLXCSTF"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
       }
-      .chart-corner{
-        display:block;
-        grid-column:1;
-        grid-row:1;
-        min-height:1px;
+      gtag("js", new Date());
+
+      gtag("config", "G-95GMLXCSTF");
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #f4efe6;
+        --bg-footer-scrim: rgba(244, 239, 230, 0.92);
+        --bg-elevated: rgba(255, 255, 255, 0.72);
+        --border-glass: rgba(255, 255, 255, 0.3);
+        --shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        --text: #000000;
+        --text-secondary: #8e8e93;
+        --accent: #34c759;
+        --accent-muted: rgba(52, 199, 89, 0.12);
+        --danger: #ff3b30;
+        --radius-lg: 22px;
+        --radius-md: 16px;
+        --radius-sm: 12px;
+        --font: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", sans-serif;
+        --tap-scale: 0.98;
       }
-      .axis-row{
-        grid-column:2;
-        grid-row:1;
-        margin-left:0;
-        align-self:end;
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
       }
-      .rows-wrap{display:contents;position:static}
-    }
-    .axis-inner{position:absolute;inset:0}
-    .axis-tick{
-      position:absolute;bottom:3px;
-      font-size:var(--text-micro);font-weight:300;font-variant-numeric:tabular-nums;color:var(--text-tertiary);
-      transform:translateX(-50%);white-space:nowrap;
-    }
-    .axis-tick:first-child{transform:translateX(0)}
-    .axis-tick:last-child{transform:translateX(-100%)}
 
-    .row{
-      display:flex;align-items:center;border-top:1px solid var(--bs);min-height:56px;
-    }
-    @supports (grid-template-columns:subgrid){
-      .row{
-        display:grid;
-        grid-template-columns:subgrid;
-        grid-column:1 / -1;
-        align-items:center;
+      html {
+        -webkit-text-size-adjust: 100%;
       }
-    }
-    .row.locked{opacity:.4}
-    .meta{flex:0 0 var(--chart-meta-w);padding:10px 14px 10px 0}
-    .fn{font-size:13px;font-weight:700;color:var(--text-primary);display:block;margin-bottom:4px}
-    .row.featured .fn{color:var(--accent-primary)}
-    .tag{display:inline-flex;align-items:center;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:100px;padding:2px 8px;margin-bottom:4px}
-    .tag-best{background:var(--ac-d);color:var(--ac)}
-    .fhint{font-size:11px;font-weight:400;color:var(--t3);display:block}
 
-    .ba{flex:1;position:relative;height:56px;min-width:0;overflow:visible}
-    .row:has(.b-slot.b-slot--below) .ba{padding-bottom:22px}
-    .row:has(.b-slot.b-slot--below){min-height:72px;align-items:flex-start}
-    .row:has(.b-slot.b-slot--below) .meta{padding-top:12px}
-    .consensus-col{position:absolute;top:0;bottom:0;background:var(--ac-col);border-left:1px solid var(--ac-cb);border-right:1px solid var(--ac-cb);z-index:0}
-    .gl{position:absolute;top:0;bottom:0;width:1px;background:var(--bs);z-index:1}
-    .bt{position:absolute;inset:0;z-index:2}
-    .b-slot{position:absolute;top:0;bottom:0}
-    .b-visual{
-      position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
-      height:20px;border-radius:6px;
-      box-sizing:border-box;
-    }
-    .row.featured .b-visual{background:var(--accent-primary);box-shadow:0 0 20px var(--accent-glow)}
-    .row:not(.featured):not(.locked) .b-visual{background:var(--surface-r);border:1px solid var(--bm)}
-    .b-value{
-      font-size:11px;font-weight:700;font-variant-numeric:tabular-nums lining-nums;
-      white-space:nowrap;line-height:1.2;pointer-events:none;
-    }
-    .b-value--inside{
-      position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
-      display:flex;align-items:center;justify-content:center;
-    }
-    .b-value--outside{
-      display:none;position:absolute;color:var(--text-secondary);
-    }
-    .b-slot.is-narrow .b-value--inside{visibility:hidden}
-    .b-slot--below .b-value--outside{
-      display:block;left:50%;top:100%;transform:translateX(-50%);margin-top:5px;
-    }
-    .b-slot--left .b-value--outside{
-      display:block;right:100%;top:50%;transform:translateY(-50%);margin-right:8px;left:auto;
-    }
-    .b-slot--right .b-value--outside{
-      display:block;left:100%;top:50%;transform:translateY(-50%);margin-left:8px;
-    }
-    .row.featured .b-value--inside{color:var(--text-on-fill);font-size:var(--text-small)}
-    .row.featured .b-value--outside{color:var(--text-secondary);font-size:var(--text-small)}
-    .row:not(.featured) .b-value--inside,.row:not(.featured) .b-value--outside{color:var(--text-secondary)}
-
-    /* Sweet spot */
-    .sweet-spot{
-      display:flex;align-items:center;
-      background:var(--surface-i);border-top:1px solid var(--ac-b);
-      margin:0 -24px;width:calc(100% + 48px);
-      min-height:80px;padding:14px 24px;
-    }
-    .ss-meta{
-      flex:0 0 var(--chart-meta-w);
-      padding:10px 14px 10px 0;
-    }
-    @supports (grid-template-columns:subgrid){
-      .sweet-spot{
-        display:grid;
-        grid-template-columns:subgrid;
-        grid-column:1 / -1;
+      body {
+        margin: 0;
+        min-height: 100dvh;
+        font-family: var(--font);
+        color: var(--text);
+        background: var(--bg);
+        line-height: 1.45;
       }
-    }
-    .ss-eyebrow{font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--ac);display:block;margin-bottom:5px}
-    .ss-nums{display:flex;align-items:center;margin-bottom:3px;line-height:1}
-    .ss-n{
-      font-size:clamp(28px,7vw,40px);
-      font-weight:900;
-      letter-spacing:-.03em;
-      font-variant-numeric:tabular-nums lining-nums;
-      color:var(--text-primary);
-    }
-    .ss-dash{
-      font-size:clamp(22px,5vw,28px);font-weight:500;color:var(--text-primary);
-      margin:0 6px;align-self:center;opacity:.95;
-    }
-    .ss-unit{font-size:12px;font-weight:400;color:var(--t2);margin-left:5px;align-self:flex-end;padding-bottom:2px}
-    .ss-hint{font-size:11px;font-weight:400;color:var(--t3);display:block}
-    .ss-ba{flex:1;position:relative;height:80px;min-width:0}
-    .ss-ba .bt{position:absolute;left:0;right:0;top:0;bottom:0;width:100%;height:100%}
-    .ss-bar{
-      position:absolute;top:50%;margin-top:-14px;
-      height:28px;border-radius:8px;box-sizing:border-box;
-      background:var(--ac-d);border:1.5px solid var(--ac);
-      box-shadow:0 0 16px var(--ac-g),0 0 40px rgba(0,180,216,.09);z-index:2;
-    }
-    .ss-bpm{
-      position:absolute;top:50%;
-      font-size:13px;font-weight:800;font-variant-numeric:tabular-nums lining-nums;
-      color:var(--accent-primary);white-space:nowrap;z-index:3;
-      /* vertical center is handled by JS setting top:50% and this transform: */
-    }
-    .ss-bpm-l{transform:translateY(-50%) translateX(calc(-100% - 8px))}
-    .ss-bpm-r{transform:translateY(-50%) translateX(8px)}
 
-    /* Card CTA */
-    .card-cta{padding:16px 24px;border-top:1px solid var(--bs);display:flex;gap:10px}
-    .btn-share{flex:1;background:var(--accent-primary);color:var(--text-on-fill);border:none;border-radius:12px;font-family:inherit;font-size:var(--text-label);font-weight:600;padding:13px 12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px}
-    .btn-share:hover{background:var(--accent-primary-hover)}
-    .btn-recalc{background:transparent;color:var(--text-secondary);border:1px solid var(--border);border-radius:12px;font-family:inherit;font-size:var(--text-label);font-weight:600;padding:13px 18px;cursor:pointer;white-space:nowrap;min-height:44px}
-    @media (max-width:479px){
-      .card-cta{flex-direction:column;align-items:stretch}
-      .btn-recalc{width:100%}
-    }
+      .app {
+        max-width: 450px;
+        margin: 0 auto;
+        padding: 24px;
+        padding-bottom: max(24px, env(safe-area-inset-bottom));
+      }
 
-    /* ═══ Measure ═══ */
-    .measure-intro h3{font-size:var(--text-heading-3);font-weight:700;color:var(--text-primary);margin-bottom:12px;letter-spacing:-.01em}
-    .measure-intro p{font-size:var(--text-body);font-weight:400;color:var(--text-secondary);line-height:1.7;margin-bottom:10px}
-    .measure-intro strong{color:var(--text-primary);font-weight:600}
-    .strap-q{font-size:var(--text-body);font-weight:700;color:var(--text-primary);margin:24px 0 12px}
-    .toggle-group{display:flex;gap:10px;margin-bottom:28px}
-    .toggle-group--experience{flex-direction:column;align-items:stretch}
-    @media (min-width:480px){
-      .toggle-group--experience{flex-direction:row;flex-wrap:nowrap}
-    }
-    .toggle-btn{
-      flex:1;background:var(--surface-raised);color:var(--text-secondary);
-      border:1px solid var(--border);border-radius:12px;
-      font-family:inherit;font-size:var(--text-label);font-weight:600;padding:14px 12px;cursor:pointer;
-      min-height:44px;line-height:1.25;
-    }
-    .toggle-btn.active{background:var(--accent-tint);color:var(--accent-primary);border-color:var(--accent-border)}
-    .tips-card{display:none;background:var(--surface);border:1px solid var(--bs);border-radius:16px;padding:22px}
-    .tips-card.visible{display:block}
-    .tips-card h4{font-size:15px;font-weight:700;color:var(--t1);margin-bottom:12px}
-    .tips-list{list-style:none;display:flex;flex-direction:column;gap:10px}
-    .tips-list li{font-size:14px;font-weight:400;color:var(--t2);line-height:1.5;padding-left:20px;position:relative}
-    .tips-list li::before{content:'→';position:absolute;left:0;color:var(--ac);font-size:12px}
+      .site-footer {
+        margin-top: 18px;
+        text-align: center;
+      }
 
-    /* Product grid */
-    .product-grid{display:none;flex-direction:column;gap:12px}
-    .product-grid.visible{display:flex}
-    @media(min-width:480px){.product-grid.visible{display:grid;grid-template-columns:repeat(3,1fr)}}
-    .product-card{background:var(--surface);border:1px solid var(--bs);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
-    .product-img{background:var(--surface-i);height:100px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--bs)}
-    .product-body{padding:14px;display:flex;flex-direction:column;flex:1}
-    .product-badge{display:inline-flex;align-items:center;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:100px;padding:2px 8px;margin-bottom:7px;align-self:flex-start}
-    .badge-pick{background:var(--ac-d);color:var(--ac)}
-    .badge-value{background:rgba(249,198,35,.12);color:var(--zone-3)}
-    .product-name{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:5px}
-    .product-desc{font-size:12px;font-weight:400;color:var(--t2);line-height:1.5;margin-bottom:12px;flex:1}
-    .product-footer{display:flex;align-items:center;justify-content:space-between}
-    .product-price{font-size:12px;font-weight:600;color:var(--t3);font-variant-numeric:tabular-nums}
-    .btn-buy{font-size:12px;font-weight:700;color:var(--ac);text-decoration:none;background:var(--ac-d);border:1px solid var(--ac-b);border-radius:8px;padding:5px 10px;white-space:nowrap}
-    .affiliate-note{font-size:11px;font-weight:400;color:var(--t3);margin-top:14px;line-height:1.5}
+      .site-footer-copy {
+        margin: 0;
+        font-size: 0.8125rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        letter-spacing: 0.01em;
+      }
 
-    /* ═══ Train / Playlists ═══ */
-    .train-intro{font-size:15px;font-weight:400;color:var(--t2);line-height:1.7;margin-bottom:28px}
-    .activity-group{margin-bottom:32px}
-    .activity-header{
-      display:flex;align-items:center;gap:10px;margin-bottom:14px;
-      padding-bottom:10px;border-bottom:1px solid var(--bs);
-    }
-    .activity-icon{
-      width:28px;height:28px;border-radius:7px;background:var(--surface-r);
-      display:flex;align-items:center;justify-content:center;
-      font-size:14px;
-    }
-    .activity-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t2)}
-    .activity-count{font-size:11px;font-weight:500;color:var(--t3)}
+      .glass {
+        background: var(--bg-elevated);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid var(--border-glass);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow);
+      }
 
-    .playlist-grid{display:flex;flex-direction:column;gap:10px}
-    @media(min-width:400px){.playlist-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}}
+      .panel-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
 
-    .pl-card{background:var(--surface);border:1px solid var(--bs);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px}
-    .pl-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
-    .pl-name{font-size:13px;font-weight:700;color:var(--t1);line-height:1.3}
-    .pl-duration{font-size:11px;font-weight:600;color:var(--t3);font-variant-numeric:tabular-nums;white-space:nowrap}
-    .pl-desc{font-size:12px;font-weight:400;color:var(--t2);line-height:1.5}
-    .pl-footer{display:flex;align-items:center;justify-content:space-between}
-    .btn-spotify{
-      font-size:11px;font-weight:700;color:#1DB954;
-      background:rgba(29,185,84,.1);border:1px solid rgba(29,185,84,.3);
-      border-radius:8px;padding:5px 10px;text-decoration:none;white-space:nowrap;
-    }
-    .btn-soon{font-size:11px;font-weight:600;color:var(--t3);background:var(--surface-r);border:1px solid var(--bs);border-radius:8px;padding:5px 10px;white-space:nowrap;cursor:default}
+      .brand {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+      }
 
-    .pl-coming-note{font-size:var(--text-small);font-weight:400;color:var(--text-tertiary);margin-top:4px}
-    .pl-spotify-inline{color:var(--accent-primary);text-decoration:none;font-weight:600}
-    .pl-spotify-inline:hover{color:var(--accent-primary-hover)}
+      .brand-name {
+        font-weight: 700;
+        font-size: 1.35rem;
+        letter-spacing: -0.02em;
+      }
 
-    .spotify-link{
-      display:inline-flex;align-items:center;gap:8px;margin-top:8px;
-      font-size:13px;font-weight:600;color:var(--ac);text-decoration:none;
-    }
-    .spotify-link:hover{color:var(--ac-h)}
+      .brand-tag {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
 
-    /* ═══ Support / Tip ═══ */
-    .support-wrap{max-width:560px;margin:0 auto;padding:0 24px 48px}
-    .support-card{
-      background:var(--surface);border:1px solid var(--bs);border-radius:20px;
-      padding:28px 24px;text-align:center;
-    }
-    .support-icon{font-size:28px;margin-bottom:12px;display:block}
-    .support-card h3{font-size:17px;font-weight:800;letter-spacing:-.015em;color:var(--t1);margin-bottom:8px}
-    .support-card p{font-size:14px;font-weight:400;color:var(--t2);line-height:1.65;margin-bottom:20px;max-width:340px;margin-left:auto;margin-right:auto}
-    .btn-bmc{
-      display:inline-flex;align-items:center;gap:8px;
-      background:#FFDD00;color:#1a1a1a;
-      font-family:inherit;font-size:14px;font-weight:700;
-      padding:13px 22px;border-radius:12px;text-decoration:none;border:none;cursor:pointer;
-    }
-    .btn-bmc:hover{background:#f0ce00}
-    .btn-bmc svg{flex-shrink:0}
+      .brand--inline .brand-name {
+        font-size: 1.06em;
+        letter-spacing: -0.02em;
+      }
 
-    /* ═══ Footer ═══ */
-    .prefooter-feedback{
-      text-align:center;margin:20px auto 0;padding:0 8px;
-      max-width:340px;width:100%;
-    }
-    .prefooter-feedback p{
-      font-size:15px;font-weight:500;color:var(--text-secondary);
-      line-height:1.3;white-space:nowrap;
-    }
-    @media (max-width:380px){
-      .prefooter-feedback p{font-size:12px;letter-spacing:-0.02em}
-    }
-    .prefooter-feedback a{color:var(--accent-primary);font-weight:600;text-decoration:none}
-    .prefooter-feedback a:hover{color:var(--accent-primary-hover);text-decoration:underline}
-    footer{border-top:1px solid var(--bs);padding:28px 24px;text-align:center;max-width:560px;margin:0 auto}
-    .footer-copy{font-size:12px;font-weight:400;color:var(--t3);line-height:1.6}
-    .footer-disc{font-size:11px;color:var(--t3);margin-top:10px;line-height:1.5;opacity:.7}
-  </style>
-</head>
-<body>
+      .brand--inline .brand-tag {
+        font-size: 0.68em;
+      }
 
-<header class="site-header">
-<!-- ══ Nav ══ -->
-<nav>
-  <!--
-    Logo file: Brand/logo/logo dark.png
-    The space in the filename requires %20 encoding in HTML src attributes.
-  -->
-  <img class="nav-logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAV4AAABLCAYAAAA4R++GAAAACXBIWXMAAAsSAAALEgHS3X78AAAMaElEQVR4nO2dPXbbuhaFt956nQqzVWV1Lu1XpgpTu7DvCMKMwMoILI/gOiMIPYLIherIlcsrlaouXbGlCtZ6BQ8TxiZ++COQtPa3lgsLJACC5MbBwQE42u/3IIQQ4o7/dF0BQgg5Nii8hBDiGAovIYQ4hsJLCCGOofASQohjKLyEEOIYCi8hhDiGwksIIY6h8BJCiGP+23UFAODDh8sLAF7X9bDh+Xm5UqWNllvfXU2Og/3l2UqV9uHDpe+uJo2Inp+XUVnChw+XUwBTl5VpwPr5eZmUJQzoXiTPz8t115XohfACuAfwsetKWDLSpP10Vovj4T209x2AuSItAHDrrCbN+ARgpUgbyr14AuB3XQm6GgghxDEUXkIIcQyFlxBCHEPhJYQQx1B4CSHEMRReQghxDIWXEEIcQ+ElhBDHjPjNNUIIcQstXkIIcQyFlxBCHEPhJYQQx1B4CSHEMRReQghxDIWXEEIcQ+ElhBDH9GIj9DSJfTjYnHjsTeaHLoP8ZrTcBsju6xRvN7p/ARAh21h7sb88q/1VgDSJ53XPVTHEZyVN4gsA14rk9dibLGrm6wGYKZKjsTcJ6+R7zPRiAYW8OAffhX/sTXRfMyAtMVpu58he1JMKpz0BmOs+9aMiTeLWH+IhPisikGsApyXJOwDTsTcp/XSPId97ADeK5L/qCvoxQ1cDaY3RcjsdLbdrZJ1oFdEFMov452i5vW+/ZseBiKrKMj2B+vNDStIknkItuk8U3XpQeEkrjJbbKTJr67xhVjej5TZsXKEjRYTwSZF8I+6IKoSatKBiXkSg8JK2WKC6lavis7grSD0CTZr1iELmXlQfob0be5PIvkqkSC8m18iwEZFsaum+5na03Ib7y7Oo5vkv0Ftr75axN4nSJL5D+bzJxzSJry1dBKHi9xdUEHDylmMS3q9dV+AdExjSd8gs4hWySAZfzimbBHqd77xmnaIhRia0yD3UbXyP7H4oSZNYdS4AzOpM0pHf9CKqoQnis1pBP8x9HHsTVZgNacBoufUB/NQcsgPgvw4XGy23HjIB+Kw5d7O/PDP6JBVRDU9jb+Kbzn3PpEl8DeCHIvlO1TFJdESE8nfq6Nu1DQZt8cqM6wp60d2gxiSAPHyvX/pk7E1qx5vWLLe1MsVnV6SNvF/n+Zrrshjd/eVZAiAYLbfXUN+/tt0XraN4TtaHsgjF0PDG3mRlOnbsTRZpEj8CuCpJnqVJfK+opy4UMLCsp9N2GRqDFV65saYJnR2AwPZmi5DPkAWhlw6z0iQGgEcAC5vA8TSJV9BPUMzlOB/ZsPrNsWkS75BZh6oXRVW2h+xFCaAQscL1hDVDg3QW6cYiLneFcmHoLfKcBNC4S9IkfkH2fN7bTEIprPa7sTeZi9jOUWinNIltY41nyDrH1+/JCX67I4r1mEIdU6+dUHPdLjXP7YXFPuSohhBmi2hmY9GlSexJkPi/yGIWTb7HKwDf0ySOZDjXCCn7J9QCfYLsZYhsw4GkXhGAv2FupysAP9IkXtcIN/I0aTbW9EFHEG0ji33yWGXdc3KK7Fn6t8nKOrmPK9TsnETcVBNhn0vu91xxbN75l+K6XYbOIC3eNIlnMD+I3ywtUg/Zg11nWHuKTLC+jb2JKnDdVP4M6gD115wAWKVJfGGwPELofacqzgH8kybxlwrLQENk7VeG6vciOqHfWdbBCQ3a9VZGNNcVh9oesvZtFKYnVnMA9USbD/wadamuTzmh1kG7DJ7BCa/cqL8Nh21shLCh6Ba5kaFfVfG9QHVLJh8illraYj3XeQmKfE+TOLFxPewvz8K6hcgEm685pDfWcANxyfmITESrjJACtBcbHaB8EvRjmsS++IzninOfVB1xS+2ygIO9WvrEoFwN4kMyicEO9jcxRHsTODc13A51fZtX0hZ/IOXbWs8mQumYDsk99MISHrh8K8Ra1InLI4A7+XvQHHclIxxb2hJdiLA+KpJDw2KJ0jq32C4fj83tMDSL12Z1lNWwRR40W+HbwE6gjfGRLRLgrYViCmp/we9Y2imyDkrljyudfGkL2blM99Lmsb91uZCJzaqsiyMX6XxU7bpB9rxFxR9FRBYof2bmaRKHFYfWO2T3etUwCkU10XYKdVt/KyvzAO2ii7J4dwxGeGVIYxK/rzZhNsLckL5D9qAuxt4kKUQ86CzK0zSJgxrb5G2QWXf5A27jw/aL/xgC3gHgYexNgtc/GqIuPqdJ3HqwvIjud8NhgYSc1eUE6uuqgirc7QWAX9Y2snLMR/lOYSfIOjPblV87Kaex20XqdY/yqIWya8wFvwxVu+T1PXS7DJpBuBoshjRAtkjC6qaJiJpeytnYm/yyTMbeJBJLSLUBSU5Vd8MG2YN6P/YmK/m7hn5oVrXcF6h3rbqW9Dr5VsZSdB/2l2euRg4mAsXvc12HZNgpTJVnGa2Ibo6EYenudxFdpxvUOCdvF9W5qt/fHb0XXgl3Mb2oVRdJ+Ib0R43Veg39bHtVv63qQa06UacrVzm0ld91HZZfsR5KZNcxm3tZK0LkQJR10DubUY1MTpaJ3Lml/3xzoAU7gcUxygk1oUm7rNCsXQZPr4W3sEhCR6VFEsLUkB6qEqScle7kKrGwKteIlLOxycOivNs0ifeqP+ijRKY2ddAxWm690XK7gHnUskG2vLgXfj5Nu1YRw5Xid5tnJKpQjjWGibYcZefXg3YZPH338S5gXsxgtUjiFb4h3ZTfGnoL07bXNgmrrQAd0kpo9CLIPr2qCZUibYtuXcu5WL6qXVcV8otq1CHnkOF0qok2QDGhVqDrdhk8vRVemQQw+WGtFklUxeE+o72w7AzUDmkaLbcXMO+lARzG0k0qTLR2Qd42nSATXWuUv2Nd+td9dNguruilq8EyHtVqkQTpBplEW8Esug/okXvBIcd2vbYcRbv0zuIV/1FoOKzKIokyImis6cJKnvfCBg4f6NFyO4N5dSEAfNtfng2x82zDtRO1kEffaKNderNa8ZD0SnhlMi2Eecex0jjBCkSG9Kkh3RRiZcq/bUzlzVx1JBK5YLOE9EuT5caOiBS/+xXyUPnIh2zZRYrf/Qp5NJk7MJZTtrKzT/TN1RCipR3HDJjOn6vCWsQNoqvjzvW3qKQ8XYhbq7G4ZUjkwgpm0d0B+GsAoqtr13ObF1ueodJJ2EPv63xIDtwuK4sq2FjWvY6O6I3Fa7nj2AOyrRH9OmXkN1U2iN5BbVmfonyv0twi19HVxIQuXCuQZaqlL7tMZBZ96sVFIgvTwpQKkQulX6PoOap2DWBe/ahyo5hCuYaAql1mMEeTNG2X8zSJpwYDZ26ZVyf0QngtdxwDshvdZCek4sbRprjSz4U44giZ1ahaJlkkbFC/JoRQX0++nWRQ3HFMrm+GtxOZRf+3tiOpELkAZMPr+9Fya3HoL2YdC3WI8na9TZN4pbLQZK5CtaF4X1blNSFEebvcpEm81uxmVrVdVPukLGQu5o3LxnJ7gU7phfCim95pDrOIX6HaSrSnriblxt5klSbxE/Sbqf+QL07kFq0pXG8Hc0di0xnlnMIcl/2aTlcyGdr1Z5p9zffX5i6Fr37MFVm+HCIE0jWGdvkuLoc22mWFchE9B7CWjXci+c1H9jz2WnSB/givcySO8SvsLG0bduh+rXmAzH9tEkLbzWO0+xEcETMA/yjSbpFZv/liGNNLH7RVqR7gol1CqENLT2Fegt5L+ja55hTxXVbdjKaMPNIiaiGv2kj5QUvZPdhuOvTeEd/4F8Nh5zCLy5f3FKbool2kjG/Va4cnmDe06oyjFl4AkK0S7xpk0dq2fW0gPtxPaPbZnLuyLSSPGRkGf0H9dq3yOaXB4Khd5rDct0TYwEEkTxOOXniBX1vlfUK1HnKHrCee9kV0c8R6mKK6Nf8E4JPNF1yPERGIC1R7Tp4A/O89im7OodtF3F0+7CzfRzSP8z84ffHxhuh4fbaIlV/4RLWPbGInHybtkPlPI2R1XVje3BDqa4sOdW6+76mE6V0ju54p/vTvbvDn9ZjqU4aqfm0RWRxTNmKxOa8y0kavn5Mpfk8avuDPNrXtlMuuYVWzmraEijKiqhkdsF3y/BPIVyoK+RdZI9v+tJhviLfXF1Up91CM9vuyT88TQgg5FHQ1EEKIYyi8hBDiGAovIYQ4hsJLCCGOofASQohjKLyEEOIYCi8hhDiGwksIIY6h8BJCiGMovIQQ4hgKLyGEOIbCSwghjqHwEkKIY/4Pa1fuBqe7Q1kAAAAASUVORK5CYII=" alt="Zone 2 For You">
-</nav>
+      .card-title-line {
+        margin: 0;
+        display: flex;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 6px 8px;
+        min-width: 0;
+        flex: 1;
+        font-size: 1.125rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        line-height: 1.25;
+      }
 
-<!-- ══ Zone strip ══ -->
-<div class="zstrip">
-  <div style="background:var(--zone-1)"></div><div style="background:var(--zone-2)"></div>
-  <div style="background:var(--zone-3)"></div><div style="background:var(--zone-4)"></div>
-  <div style="background:var(--zone-5)"></div>
-</div>
+      .card-title-sep {
+        font-weight: 500;
+        color: var(--text-secondary);
+        user-select: none;
+      }
 
-<!-- ══ Step progress bar ══ -->
-<div class="steps-bar">
-  <div class="steps-inner">
-    <a class="step step--current" id="step-1" href="#calculate">
-      <div class="step-circle"><span class="step-icon">01</span></div>
-      <span class="step-label">Calculate</span>
-    </a>
-    <div class="step-conn" id="conn-1-2"></div>
-    <a class="step" id="step-2" href="#measure">
-      <div class="step-circle"><span class="step-icon">02</span></div>
-      <span class="step-label">Measure</span>
-    </a>
-    <div class="step-conn" id="conn-2-3"></div>
-    <a class="step" id="step-3" href="#train">
-      <div class="step-circle"><span class="step-icon">03</span></div>
-      <span class="step-label">Train</span>
-    </a>
-  </div>
-</div>
-</header>
+      .card-title-topic {
+        font-weight: 600;
+      }
 
-<!-- ══ Hero ══ -->
-<section class="hero">
-  <div class="hero-eyebrow">Zone 2 Training</div>
-  <h1>Your Zone 2 range, clear and ready to use.</h1>
-  <p class="hero-sub">Get one range from the inputs that matter for you, without reconciling competing formulas.</p>
-  <a href="#calculate" class="hero-cta">
-    Calculate my Zone 2
-    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
-      <path d="M7.5 2.5v7M4 9.5l3.5 3 3.5-3" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </a>
-</section>
+      .icon-btn {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border: none;
+        border-radius: 14px;
+        background: rgba(0, 0, 0, 0.05);
+        color: var(--text);
+        cursor: pointer;
+        transition: transform 0.15s ease, background 0.15s ease;
+      }
 
-<!-- ══════════════════════════════════
-     SECTION 01: CALCULATE
-     State A: Form (default)
-     State B: Results (after submit)
-     Only one is visible at a time.
-══════════════════════════════════ -->
-<div class="section" id="calculate">
-  <div class="section-header">
-    <span class="section-num">01</span>
-    <span class="section-title">Calculate</span>
-  </div>
-  <p class="section-intro">Enter your age and optional heart rate details. We compare common Zone 2 formulas and surface one clear range to use.</p>
+      .icon-btn:hover {
+        background: rgba(0, 0, 0, 0.08);
+      }
 
-  <!-- State A: Input form -->
-  <div class="form-card" id="form-card">
-    <h2>Enter your numbers</h2>
-    <div class="fields">
-      <div class="field">
-        <div class="field-header">
-          <label class="field-label" for="age">Age</label>
-        </div>
-        <div class="input-row">
-          <input class="field-input" type="number" id="age" min="15" max="80" placeholder="38" inputmode="numeric" value="38">
-          <span class="field-unit">years</span>
-        </div>
-        <span class="field-hint">Used by every formula.</span>
-      </div>
+      .icon-btn:active {
+        transform: scale(var(--tap-scale));
+      }
 
-      <div class="field">
-        <div class="field-header">
-          <label class="field-label" for="rhr">Resting Heart Rate</label>
-          <span class="field-opt">Optional</span>
-        </div>
-        <div class="input-row">
-          <input class="field-input" type="number" id="rhr" min="30" max="100" placeholder="Optional" inputmode="numeric" value="54">
-          <span class="field-unit">bpm</span>
-        </div>
-        <span class="field-hint">Measure first thing in the morning before getting up. Unlocks Karvonen, the most personalized formula.</span>
-      </div>
+      .icon-btn:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
 
-      <div class="field">
-        <div class="field-header">
-          <label class="field-label" for="maxhr">Max Heart Rate</label>
-          <span class="field-opt">Optional</span>
-        </div>
-        <div class="input-row">
-          <input class="field-input" type="number" id="maxhr" min="130" max="220" placeholder="Optional" inputmode="numeric" value="183">
-          <span class="field-unit">bpm</span>
-        </div>
-        <span class="field-hint">From a lab test or a true all-out effort. If unknown, we estimate with 220 minus Age.</span>
-      </div>
+      main.glass {
+        padding: 22px 20px 20px;
+      }
 
-      <div class="field">
-        <div class="field-header">
-          <label class="field-label">Training Experience</label>
-        </div>
-        <div class="toggle-group toggle-group--experience" style="margin-bottom:0">
-          <button type="button" class="toggle-btn" id="fit-beginner" onclick="setFitness('beginner')">Starting out</button>
-          <button type="button" class="toggle-btn active" id="fit-intermediate" onclick="setFitness('intermediate')">1&ndash;2 years</button>
-          <button type="button" class="toggle-btn" id="fit-advanced" onclick="setFitness('advanced')">2+ years consistent</button>
-        </div>
-        <span class="field-hint">Used to recommend the right formula for your situation and adjust the Maffetone range.</span>
-      </div>
-    </div>
-    <div class="form-actions">
-      <button type="button" class="btn-calc" onclick="calculate()">Calculate my Zone 2</button>
-      <p class="privacy-note">Your data never leaves your browser.</p>
-    </div>
-  </div>
+      .subtitle {
+        margin: 0 0 22px;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+      }
 
-  <!-- State B: Results chart -->
-  <div id="results">
-    <div class="results-card">
-      <div class="zstrip">
-        <div style="background:var(--zone-1)"></div><div style="background:var(--zone-2)"></div>
-        <div style="background:var(--zone-3)"></div><div style="background:var(--zone-4)"></div>
-        <div style="background:var(--zone-5)"></div>
-      </div>
+      .default-dashboard {
+        margin: 0 0 20px;
+      }
 
-      <div class="results-hd">
-        <h2>Your Zone 2 range</h2>
-        <p>Based on your inputs, here is how the formulas compare.</p>
-      </div>
+      .default-dashboard-grid {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: 1fr;
+      }
 
-      <div class="inputs-header">
-        <span class="inputs-label">Results for</span>
-        <div class="chips" id="chips"></div>
-        <button type="button" class="change-inputs" onclick="backToForm()">Change inputs</button>
-      </div>
-      <div class="sep"></div>
+      /* Mobile IAB-style slot (e.g. MREC / adaptive banner mount) — hidden on larger breakpoints. */
+      .default-dashboard-ad-wrap {
+        margin-top: 12px;
+        display: flex;
+        justify-content: center;
+      }
 
-      <div class="breakdown">
-        <div class="breakdown-hd">Formula breakdown</div>
-        <div class="chart-layout">
-          <div class="chart-corner" aria-hidden="true"></div>
-          <div class="axis-row"><div class="axis-inner" id="axis-inner"></div></div>
-          <div class="rows-wrap" id="formula-rows"></div>
-          <div class="sweet-spot">
-            <div class="ss-meta">
-              <span class="ss-eyebrow">Zone 2 Sweet Spot</span>
-              <div class="ss-nums">
-                <span class="ss-n" id="ss-n-lo">–</span>
-                <span class="ss-dash">-</span>
-                <span class="ss-n" id="ss-n-hi">–</span>
-                <span class="ss-unit">bpm</span>
+      @media (min-width: 768px) {
+        .default-dashboard-ad-wrap {
+          display: none;
+        }
+      }
+
+      .default-dashboard-reset-wrap {
+        margin: 14px 0 0;
+        text-align: center;
+      }
+
+      .default-dashboard-reset-wrap[hidden] {
+        display: none !important;
+      }
+
+      .default-dashboard-reset-link {
+        margin-top: 0;
+      }
+
+      .default-card {
+        padding: 14px;
+        border-radius: var(--radius-md);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        background: linear-gradient(165deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 255, 0.95));
+      }
+
+      .default-card__eyebrow {
+        margin: 0 0 4px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+      }
+
+      .default-card__title {
+        margin: 0;
+        font-size: 1rem;
+      }
+
+      .default-card__heading-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+
+      .default-hint-btn {
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        border-radius: 999px;
+        border: 1px solid rgba(0, 0, 0, 0.14);
+        background: rgba(0, 0, 0, 0.03);
+        color: var(--text-secondary);
+        font-size: 0.78rem;
+        font-weight: 700;
+        font-family: inherit;
+        cursor: pointer;
+      }
+
+      .default-hint-btn:hover {
+        background: rgba(0, 0, 0, 0.08);
+      }
+
+      .default-hint-btn:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      .default-card__body {
+        margin: 0 0 12px;
+        color: var(--text-secondary);
+        font-size: 0.88rem;
+        line-height: 1.45;
+      }
+
+      .default-card__meta {
+        margin: 0;
+        color: var(--text-secondary);
+        font-size: 0.78rem;
+      }
+
+      .default-card__cta {
+        width: 100%;
+      }
+
+      .default-plan-cta-wrap {
+        width: 100%;
+      }
+
+      .default-plan-cta-wrap[hidden] {
+        display: none !important;
+      }
+
+      .default-zone-summary {
+        text-align: center;
+      }
+
+      .default-zone-summary[hidden] {
+        display: none;
+      }
+
+      .default-zone-range,
+      .default-plan-launch-link {
+        display: block;
+        width: 100%;
+        margin: 0;
+        padding: 4px 8px;
+        font: inherit;
+        font-size: 1.35rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: inherit;
+        text-align: center;
+        text-decoration: none;
+        border: none;
+        border-radius: var(--radius-md);
+        background: none;
+        cursor: pointer;
+        box-sizing: border-box;
+      }
+
+      .default-zone-range:hover,
+      .default-plan-launch-link:hover {
+        background: rgba(52, 199, 89, 0.1);
+      }
+
+      .default-zone-range:focus-visible,
+      .default-plan-launch-link:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      .default-recalc-link {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 0;
+        border: none;
+        background: none;
+        font: inherit;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #0a7b2f;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+
+      .default-recalc-link:hover {
+        filter: brightness(1.05);
+      }
+
+      .default-recalc-link:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      .secondary-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .secondary-btn:disabled:hover {
+        background: rgba(0, 0, 0, 0.06);
+      }
+
+      /* Dashboard Plan CTA when a Zone 2 range is available (matches primary / accent). */
+      .secondary-btn.secondary-btn--zone-ready:not(:disabled) {
+        color: #fff;
+        background: var(--accent);
+        box-shadow: 0 4px 16px rgba(52, 199, 89, 0.35);
+        transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.2s ease, background 0.15s ease;
+      }
+
+      .secondary-btn.secondary-btn--zone-ready:not(:disabled):hover {
+        filter: brightness(1.03);
+      }
+
+      .secondary-btn.secondary-btn--zone-ready:not(:disabled):active {
+        transform: scale(var(--tap-scale));
+      }
+
+      .secondary-btn.secondary-btn--zone-ready:not(:disabled):focus-visible {
+        outline: 2px solid var(--text);
+        outline-offset: 3px;
+      }
+
+      .default-badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .default-pill {
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(52, 199, 89, 0.14);
+        color: #156f33;
+        font-weight: 600;
+        font-size: 0.75rem;
+      }
+
+      .plan-workspace[hidden] {
+        display: none;
+      }
+
+      fieldset {
+        margin: 0 0 18px;
+        padding: 0;
+        border: 0;
+      }
+
+      legend {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 10px;
+      }
+
+      .segmented {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        padding: 4px;
+        background: rgba(0, 0, 0, 0.05);
+        border-radius: var(--radius-md);
+      }
+
+      .segmented input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .segmented label {
+        text-align: center;
+        padding: 12px 10px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: background 0.2s ease, transform 0.15s ease, color 0.2s ease;
+        user-select: none;
+      }
+
+      .segmented label:active {
+        transform: scale(var(--tap-scale));
+      }
+
+      .segmented input:focus-visible + label {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      .segmented input:checked + label {
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        color: var(--text);
+      }
+
+      .segmented input:not(:checked) + label {
+        color: var(--text-secondary);
+      }
+
+      .field {
+        margin-bottom: 16px;
+      }
+
+      .field label {
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 8px;
+      }
+
+      .field-label-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+
+      .field-label-row label {
+        flex: 1;
+        margin-bottom: 0;
+      }
+
+      .bpm-info-btn {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        padding: 0;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.04);
+        color: var(--text-secondary);
+        font-size: 0.72rem;
+        font-weight: 700;
+        font-style: italic;
+        font-family: Georgia, "Times New Roman", serif;
+        line-height: 1;
+        cursor: pointer;
+        transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+      }
+
+      .bpm-info-btn:hover {
+        background: rgba(0, 0, 0, 0.07);
+        color: var(--text);
+      }
+
+      .bpm-info-btn:active {
+        transform: scale(var(--tap-scale));
+      }
+
+      .bpm-info-btn:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      .input-wrap {
+        position: relative;
+      }
+
+      .input-wrap input {
+        width: 100%;
+        padding: 18px 16px;
+        font-size: 1.35rem;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        text-align: center;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: var(--radius-md);
+        background: #fff;
+        color: var(--text);
+        font-family: inherit;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        -moz-appearance: textfield;
+        appearance: textfield;
+      }
+
+      .input-wrap input::-webkit-outer-spin-button,
+      .input-wrap input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      .input-wrap input::placeholder {
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+
+      .input-wrap input:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-muted);
+      }
+
+      .input-hint {
+        margin-top: 6px;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        text-align: center;
+      }
+
+      .field-error {
+        margin-top: 6px;
+        font-size: 0.8rem;
+        color: var(--danger);
+        text-align: center;
+        display: none;
+      }
+
+      .field-error.visible {
+        display: block;
+      }
+
+      .mhr-block.hidden {
+        display: none;
+      }
+
+      .primary-btn {
+        width: 100%;
+        margin-top: 6px;
+        padding: 16px 18px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        font-family: inherit;
+        color: #fff;
+        background: var(--accent);
+        border: none;
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.2s ease;
+        box-shadow: 0 4px 16px rgba(52, 199, 89, 0.35);
+      }
+
+      .primary-btn:hover {
+        filter: brightness(1.03);
+      }
+
+      .primary-btn:active {
+        transform: scale(var(--tap-scale));
+      }
+
+      .primary-btn:focus-visible {
+        outline: 2px solid var(--text);
+        outline-offset: 3px;
+      }
+
+      .plan-nav {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 6px;
+      }
+
+      .plan-nav.plan-nav--step1-submit {
+        grid-template-columns: 1fr;
+        justify-items: center;
+      }
+
+      .plan-nav.plan-nav--step1-submit .primary-btn {
+        width: auto;
+        min-width: 7.5rem;
+        padding-left: 2.25rem;
+        padding-right: 2.25rem;
+      }
+
+      .plan-nav.plan-nav--genre-actions .primary-btn {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .plan-genre-section {
+        margin-bottom: 18px;
+      }
+
+      .plan-genre-section[hidden] {
+        display: none;
+      }
+
+      .plan-genre-fieldset {
+        margin: 0;
+        padding: 0;
+        border: 0;
+      }
+
+      .plan-genre-legend {
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: var(--text);
+      }
+
+      .genre-chip-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .genre-chip {
+        display: inline-flex;
+        align-items: center;
+        margin: 0;
+        padding: 10px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        background: rgba(0, 0, 0, 0.04);
+        font: inherit;
+        font-size: 0.88rem;
+        font-weight: 600;
+        cursor: pointer;
+        color: var(--text);
+        transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+      }
+
+      .genre-chip:hover {
+        background: rgba(0, 0, 0, 0.07);
+      }
+
+      .genre-chip input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+        pointer-events: none;
+      }
+
+      .genre-chip:has(input:focus-visible) {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      .genre-chip:has(input:checked) {
+        border-color: var(--accent);
+        background: rgba(52, 199, 89, 0.14);
+        color: #156f33;
+        box-shadow: 0 0 0 1px rgba(52, 199, 89, 0.25);
+      }
+
+      .plan-genre-section .field-error {
+        margin-top: 10px;
+      }
+
+      .default-plan-summary {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .default-plan-summary[hidden] {
+        display: none;
+      }
+
+      .default-plan-launch-link[hidden],
+      .default-plan-skip-note[hidden] {
+        display: none;
+      }
+
+      .default-plan-skip-note {
+        margin: 0 0 8px;
+        font-size: 0.92rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        line-height: 1.45;
+      }
+
+      .plan-nav .primary-btn,
+      .plan-nav .secondary-btn {
+        width: 100%;
+        margin-top: 0;
+      }
+
+      .plan-nav .secondary-btn[hidden] {
+        display: none;
+      }
+
+      /* Results live inside full-screen modal only */
+      .results {
+        margin: 0;
+        padding: 0;
+        border: 0;
+      }
+
+      .results-label {
+        margin: 0 0 10px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        text-align: center;
+      }
+
+      .results-heading--visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .overlap-main-title {
+        margin: 0 0 12px;
+      }
+
+      .results-bpm {
+        text-align: center;
+        font-size: clamp(2rem, 9vw, 2.75rem);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+        color: var(--text);
+      }
+
+      .results-bpm span {
+        color: var(--accent);
+      }
+
+      .results-meta {
+        margin-top: 14px;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        text-align: center;
+      }
+
+      .results-models {
+        display: grid;
+        gap: 16px;
+      }
+
+      .results-model-card {
+        padding: 14px 12px 12px;
+        border-radius: var(--radius-md);
+        background: rgba(0, 0, 0, 0.035);
+      }
+
+      @keyframes results-container-glow {
+        0% {
+          box-shadow: 0 0 0 rgba(34, 197, 94, 0);
+        }
+        30% {
+          box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.28), 0 0 24px rgba(34, 197, 94, 0.38);
+        }
+        55% {
+          box-shadow: 0 0 0 rgba(34, 197, 94, 0);
+        }
+        78% {
+          box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.22), 0 0 20px rgba(34, 197, 94, 0.3);
+        }
+        100% {
+          box-shadow: 0 0 0 rgba(34, 197, 94, 0);
+        }
+      }
+
+      .results-model-card--final-glow {
+        animation: results-container-glow 1.25s ease-out;
+      }
+
+      .results-spectrum-row + .results-spectrum-row {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+      }
+
+      .results-spectrum-row-title {
+        margin: 0 0 10px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        text-align: center;
+      }
+
+      .results-model-title {
+        margin: 0 0 4px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        text-align: center;
+      }
+
+      .results-model-bpm {
+        margin: 0 0 14px;
+        text-align: center;
+        font-size: clamp(1.7rem, 7.2vw, 2.25rem);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+      }
+
+      .results-model-bpm span {
+        color: var(--accent);
+      }
+
+      @keyframes results-reveal-in {
+        0% {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        58% {
+          opacity: 1;
+          transform: translateY(-4px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .results-reveal {
+        opacity: 0;
+        animation: results-reveal-in 0.78s cubic-bezier(0.22, 1, 0.45, 1) forwards;
+        animation-delay: calc(var(--results-reveal-i, 0) * 0.19s);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .results-reveal {
+          opacity: 1;
+          animation: none;
+          transform: none;
+        }
+
+        .results-model-card--final-glow {
+          animation: none;
+        }
+      }
+
+      .zone-spectrum-wrap {
+        margin-top: 2px;
+      }
+
+      .zone-spectrum-labels {
+        margin-bottom: 7px;
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 2px;
+      }
+
+      .zone-spectrum-labels span {
+        font-size: 0.64rem;
+        color: var(--text-secondary);
+        text-align: center;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+
+      .zone-spectrum-track {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        height: 14px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: rgba(0, 0, 0, 0.08);
+      }
+
+      .zone-spectrum-segment {
+        border-right: 1px solid rgba(255, 255, 255, 0.6);
+      }
+
+      .zone-spectrum-segment:last-child {
+        border-right: 0;
+      }
+
+      .zone2-highlight {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        border-radius: 999px;
+        background: var(--accent);
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+      }
+
+      .zone2-callouts {
+        position: relative;
+        height: 34px;
+        margin-top: 8px;
+      }
+
+      .zone2-callout {
+        position: absolute;
+        top: 0;
+        transform: translateX(-50%);
+        text-align: center;
+        min-width: 54px;
+      }
+
+      .zone2-callout::before {
+        content: "";
+        display: block;
+        width: 1px;
+        height: 10px;
+        margin: 0 auto 4px;
+        background: rgba(0, 0, 0, 0.25);
+      }
+
+      .zone2-callout b {
+        display: block;
+        font-size: 0.72rem;
+        letter-spacing: 0.02em;
+        color: var(--text);
+        text-transform: none;
+        font-weight: 700;
+      }
+
+      .zone2-callout small {
+        display: block;
+        font-size: 0.62rem;
+        color: var(--text-secondary);
+        letter-spacing: 0.02em;
+      }
+
+      .disclaimer {
+        margin-top: 16px;
+        padding: 12px 14px;
+        font-size: 0.78rem;
+        line-height: 1.5;
+        color: var(--text-secondary);
+        background: rgba(0, 0, 0, 0.04);
+        border-radius: var(--radius-sm);
+      }
+
+      .actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .secondary-btn {
+        padding: 14px 12px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        font-family: inherit;
+        color: var(--text);
+        background: rgba(0, 0, 0, 0.06);
+        border: none;
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        transition: transform 0.15s ease, background 0.15s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .secondary-btn:hover {
+        background: rgba(0, 0, 0, 0.09);
+      }
+
+      .secondary-btn:active {
+        transform: scale(var(--tap-scale));
+      }
+
+      .secondary-btn:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      .secondary-btn svg {
+        flex-shrink: 0;
+        opacity: 0.85;
+      }
+
+      /* Results full-screen lightbox */
+      .results-modal-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 110;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        background: rgba(0, 0, 0, 0.48);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.28s ease;
+        padding: 0;
+      }
+
+      .results-modal-backdrop.open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .results-modal-sheet {
+        width: 100%;
+        max-width: 450px;
+        min-height: 100dvh;
+        max-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        background: var(--bg);
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.18);
+        transform: translateY(100%);
+        transition: transform 0.34s cubic-bezier(0.32, 0.72, 0, 1);
+        overflow: hidden;
+      }
+
+      .results-modal-backdrop.open .results-modal-sheet {
+        transform: translateY(0);
+      }
+
+      .results-modal-scroll {
+        flex: 1;
+        overflow: auto;
+        padding: max(28px, env(safe-area-inset-top)) 24px 20px;
+        padding-bottom: 16px;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .results-modal-scroll .glass {
+        padding: 24px 20px 20px;
+        border-radius: var(--radius-lg);
+      }
+
+      .results-modal-footer {
+        flex-shrink: 0;
+        padding: 12px 24px max(16px, env(safe-area-inset-bottom));
+        background: var(--bg-footer-scrim);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-top: 1px solid rgba(0, 0, 0, 0.06);
+      }
+
+      .results-modal-footer .actions {
+        margin-top: 0;
+      }
+
+      .results-modal-footer .actions.actions--share-visitor {
+        grid-template-columns: 1fr;
+      }
+
+      .results-modal-footer .primary-btn {
+        margin-top: 0;
+      }
+
+      .results-modal-backdrop.results-modal--share-visitor .results-modal-footer .secondary-btn {
+        display: none !important;
+      }
+
+      .results-modal-ad-slot {
+        margin-bottom: 10px;
+      }
+
+      /* Mount mobile banner / IAP promo ad units here (e.g. AdMob adaptive banner). */
+      .results-mobile-ad-placeholder {
+        margin: 0 auto;
+        width: 100%;
+        max-width: 320px;
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-md);
+        border: 1px dashed rgba(0, 0, 0, 0.14);
+        background: rgba(0, 0, 0, 0.04);
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+      }
+
+      @media (min-width: 520px) {
+        .default-dashboard-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .results-modal-backdrop {
+          justify-content: center;
+          padding: 20px;
+        }
+
+        .results-modal-sheet {
+          min-height: min(88dvh, 640px);
+          max-height: min(88dvh, 640px);
+          border-radius: var(--radius-lg);
+          box-shadow: var(--shadow), 0 24px 80px rgba(0, 0, 0, 0.22);
+          transform: translateY(18px) scale(0.96);
+          opacity: 0;
+          transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.26s ease;
+        }
+
+        .results-modal-backdrop.open .results-modal-sheet {
+          transform: translateY(0) scale(1);
+          opacity: 1;
+        }
+      }
+
+      /* Modal */
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding: 16px;
+        z-index: 100;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+      }
+
+      .modal-backdrop.open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      @media (min-width: 480px) {
+        .modal-backdrop {
+          align-items: center;
+        }
+      }
+
+      .modal {
+        width: 100%;
+        max-width: 400px;
+        max-height: min(85dvh, 560px);
+        overflow: auto;
+        background: #fff;
+        border-radius: var(--radius-lg);
+        padding: 22px 20px 20px;
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+        transform: translateY(16px);
+        transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+      }
+
+      .modal-backdrop.open .modal {
+        transform: translateY(0);
+      }
+
+      .modal h2 {
+        margin: 0 0 12px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      .modal p {
+        margin: 0 0 12px;
+        font-size: 0.95rem;
+        color: #3c3c43;
+      }
+
+      .modal p:last-of-type {
+        margin-bottom: 18px;
+      }
+
+      .modal a {
+        color: var(--accent);
+        font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+
+      .modal a:hover {
+        filter: brightness(0.92);
+      }
+
+      #bpmInfoModalBackdrop {
+        z-index: 101;
+      }
+
+      #calendarExportModalBackdrop {
+        z-index: 102;
+      }
+
+      .calendar-export-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin: 0 0 16px;
+      }
+
+      .calendar-export-stack .secondary-btn {
+        width: 100%;
+        margin: 0;
+      }
+
+      .modal-close {
+        width: 100%;
+        padding: 14px;
+        font-size: 1rem;
+        font-weight: 600;
+        font-family: inherit;
+        border: none;
+        border-radius: var(--radius-md);
+        background: var(--accent);
+        color: #fff;
+        cursor: pointer;
+        transition: transform 0.15s ease;
+      }
+
+      .modal-close:active {
+        transform: scale(var(--tap-scale));
+      }
+
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 24px;
+        transform: translateX(-50%) translateY(12px);
+        padding: 12px 18px;
+        background: rgba(0, 0, 0, 0.88);
+        color: #fff;
+        font-size: 0.9rem;
+        font-weight: 500;
+        border-radius: 14px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+        z-index: 200;
+        max-width: calc(100% - 48px);
+        text-align: center;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #161620;
+          --bg-footer-scrim: rgba(22, 22, 32, 0.92);
+          --bg-elevated: rgba(34, 34, 44, 0.88);
+          --border-glass: rgba(255, 255, 255, 0.1);
+          --shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+          --text: #ebebf0;
+          --text-secondary: #98989f;
+          --accent-muted: rgba(52, 199, 89, 0.22);
+        }
+
+        .icon-btn {
+          background: rgba(255, 255, 255, 0.08);
+        }
+
+        .icon-btn:hover {
+          background: rgba(255, 255, 255, 0.12);
+        }
+
+        .segmented {
+          background: rgba(255, 255, 255, 0.06);
+        }
+
+        .segmented input:checked + label {
+          background: rgba(255, 255, 255, 0.14);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+        }
+
+        .bpm-info-btn {
+          border-color: rgba(255, 255, 255, 0.18);
+          background: rgba(255, 255, 255, 0.06);
+        }
+
+        .bpm-info-btn:hover {
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        .input-wrap input {
+          border-color: rgba(255, 255, 255, 0.12);
+          background: rgba(255, 255, 255, 0.08);
+        }
+
+        .results-model-card {
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        .results-spectrum-row + .results-spectrum-row {
+          border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .zone-spectrum-track {
+          background: rgba(255, 255, 255, 0.12);
+        }
+
+        .zone-spectrum-segment {
+          border-right-color: rgba(0, 0, 0, 0.35);
+        }
+
+        .zone2-highlight {
+          box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+        }
+
+        .zone2-callout::before {
+          background: rgba(255, 255, 255, 0.35);
+        }
+
+        .disclaimer {
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        .default-card {
+          border-color: rgba(255, 255, 255, 0.12);
+          background: linear-gradient(170deg, rgba(40, 46, 62, 0.88), rgba(26, 31, 42, 0.92));
+        }
+
+        .default-pill {
+          background: rgba(52, 199, 89, 0.2);
+          color: #9feab7;
+        }
+
+        .default-hint-btn {
+          border-color: rgba(255, 255, 255, 0.2);
+          background: rgba(255, 255, 255, 0.06);
+          color: var(--text-secondary);
+        }
+
+        .default-hint-btn:hover {
+          background: rgba(255, 255, 255, 0.12);
+        }
+
+        .default-zone-range,
+        .default-plan-launch-link {
+          color: var(--text);
+        }
+
+        .default-zone-range:hover,
+        .default-plan-launch-link:hover {
+          background: rgba(255, 255, 255, 0.08);
+        }
+
+        .default-recalc-link {
+          color: #9feab7;
+        }
+
+        .genre-chip {
+          border-color: rgba(255, 255, 255, 0.16);
+          background: rgba(255, 255, 255, 0.06);
+        }
+
+        .genre-chip:hover {
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        .genre-chip:has(input:checked) {
+          color: #9feab7;
+          box-shadow: 0 0 0 1px rgba(52, 199, 89, 0.35);
+        }
+
+        .default-plan-skip-note {
+          color: var(--text-secondary);
+        }
+
+        .secondary-btn {
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        .secondary-btn:hover {
+          background: rgba(255, 255, 255, 0.14);
+        }
+
+        .results-modal-footer {
+          border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .results-mobile-ad-placeholder {
+          border-color: rgba(255, 255, 255, 0.16);
+          background: rgba(255, 255, 255, 0.04);
+        }
+
+        .modal {
+          background: #1e1e28;
+          box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55);
+        }
+
+        .modal p {
+          color: var(--text-secondary);
+        }
+
+        .modal a:hover {
+          filter: brightness(1.08);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <main class="glass">
+        <header class="panel-head">
+          <h1 class="card-title-line">
+            <span class="brand brand--inline">
+              <span class="brand-name">Zone2ForYou&trade;</span>
+            </span>
+            <span class="card-title-sep" aria-hidden="true">|</span>
+            <span class="card-title-topic">Zone 2 Range</span>
+          </h1>
+          <button type="button" class="icon-btn" id="infoBtn" aria-label="Why Zone 2?">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 16v-4" />
+              <path d="M12 8h.01" />
+            </svg>
+          </button>
+        </header>
+        <p class="subtitle">From your age, resting and max heart rates.</p>
+        <section class="default-dashboard" id="defaultDashboard">
+          <div class="default-dashboard-grid">
+            <article class="default-card">
+              <div class="default-card__heading-row">
+                <h3 class="default-card__title">Your Zone</h3>
+                <button type="button" class="default-hint-btn default-hint-trigger" data-default-hint="Calculate your personalized Zone 2 range based on your current metrics and training method." aria-label="Results hint">i</button>
               </div>
-              <span class="ss-hint" id="ss-hint"></span>
+              <button type="button" class="primary-btn default-card__cta" id="defaultCalculateBtn">Calculate</button>
+              <div class="default-zone-summary" id="defaultZoneSummary" hidden aria-live="polite">
+                <button
+                  type="button"
+                  class="default-zone-range"
+                  id="defaultZoneRange"
+                  aria-label="Open full zone comparison results"
+                ></button>
+                <button type="button" class="default-recalc-link" id="defaultRecalculateLink">Re-calculate</button>
+              </div>
+            </article>
+            <article class="default-card">
+              <div class="default-card__heading-row">
+                <h3 class="default-card__title">Plan</h3>
+                <button type="button" class="default-hint-btn default-hint-trigger" data-default-hint="Use BPM-matched playlists and your target range to keep sessions smooth and sustainable." aria-label="Plan hint">i</button>
+              </div>
+              <div class="default-plan-summary" id="defaultPlanSummary" hidden aria-live="polite">
+                <a class="default-plan-launch-link" id="defaultPlanLaunchLink" href="#" hidden>Launch Playlist</a>
+                <p class="default-plan-skip-note" id="defaultPlanSkipNote" hidden></p>
+                <button type="button" class="default-recalc-link" id="defaultPlaylistPrefsLink">Change genre</button>
+              </div>
+              <div class="default-plan-cta-wrap" id="defaultPlanPlaylistWrap">
+                <button type="button" class="secondary-btn default-card__cta" id="defaultPlanPlaylistBtn" disabled>Choose Playlist</button>
+              </div>
+            </article>
+            <article class="default-card">
+              <div class="default-card__heading-row">
+                <h3 class="default-card__title">Log</h3>
+                <button type="button" class="default-hint-btn default-hint-trigger" data-default-hint="Export your latest Results and Plan as a calendar event to keep your Zone 2 session accountable." aria-label="Log hint">i</button>
+              </div>
+              <button type="button" class="secondary-btn default-card__cta" id="defaultLogBtn" disabled>Add to Calendar</button>
+            </article>
+            <article class="default-card">
+              <div class="default-card__heading-row">
+                <h3 class="default-card__title">Share</h3>
+                <button type="button" class="default-hint-btn default-hint-trigger" data-default-hint="Launch mobile share to send your Zone2ForYou results to friends, coach, or your training group." aria-label="Share hint">i</button>
+              </div>
+              <button type="button" class="secondary-btn default-card__cta" id="defaultShareBtn" disabled>Share Results</button>
+            </article>
+          </div>
+          <aside class="default-dashboard-ad-wrap" aria-label="Advertisement">
+            <div class="results-mobile-ad-placeholder" id="defaultDashboardMobileAdUnit">
+              Mobile IAB banner · 320 × 50 (placeholder)
             </div>
-            <div class="ss-ba" id="ss-ba">
-              <span class="ss-bpm ss-bpm-l" id="ss-bpm-l"></span>
-              <span class="ss-bpm ss-bpm-r" id="ss-bpm-r"></span>
-              <div class="bt"><div class="ss-bar" id="ss-bar"></div></div>
+          </aside>
+          <div class="default-dashboard-reset-wrap" id="defaultDashboardResetWrap" hidden>
+            <button type="button" class="default-recalc-link default-dashboard-reset-link" id="defaultDashboardResetBtn">
+              Reset / Start Over
+            </button>
+          </div>
+        </section>
+
+        <div class="plan-workspace" id="planWorkspace">
+          <form id="calcForm" novalidate>
+            <div id="planInputSection">
+              <div class="field">
+                <label for="age">Age (years)</label>
+                <div class="input-wrap">
+                  <input type="number" id="age" name="age" inputmode="numeric" min="1" max="120" placeholder="e.g. 42" autocomplete="bday-year" />
+                </div>
+                <div class="field-error" id="ageError" role="alert"></div>
+              </div>
+
+              <div class="field">
+                <div class="field-label-row">
+                  <label for="rhr">Resting heart rate (BPM)</label>
+                  <button type="button" class="bpm-info-btn" data-bpm-hint="rhr" aria-label="About measuring resting heart rate in BPM" aria-haspopup="dialog" aria-controls="bpmInfoDialog" title="Measurement tip">i</button>
+                </div>
+                <div class="input-wrap">
+                  <input type="number" id="rhr" name="rhr" inputmode="numeric" min="30" max="120" placeholder="e.g. 58" autocomplete="off" />
+                </div>
+                <p class="input-hint">Morning measurement, seated or lying, is ideal.</p>
+                <div class="field-error" id="rhrError" role="alert"></div>
+              </div>
+
+              <div class="field mhr-block" id="mhrBlock">
+                <div class="field-label-row">
+                  <label for="mhr">Max heart rate (BPM)</label>
+                  <button type="button" class="bpm-info-btn" data-bpm-hint="mhr" aria-label="About measuring max heart rate in BPM" aria-haspopup="dialog" aria-controls="bpmInfoDialog" title="Measurement tip">i</button>
+                </div>
+                <div class="input-wrap">
+                  <input type="number" id="mhr" name="mhr" inputmode="numeric" min="80" max="230" placeholder="e.g. 178" autocomplete="off" />
+                </div>
+                <p class="input-hint">Optional. Leave blank for a HUNT max-HR estimate from your age; add your measured max for overlap results.</p>
+                <div class="field-error" id="mhrError" role="alert"></div>
+              </div>
             </div>
+
+            <div class="plan-genre-section" id="planGenreSection" hidden>
+              <fieldset class="plan-genre-fieldset">
+                <legend class="plan-genre-legend">What genre of music do you like?</legend>
+                <div class="genre-chip-grid" role="radiogroup" aria-label="Music genre">
+                  <label class="genre-chip"><input type="radio" name="planGenre" value="country" /> Country</label>
+                  <label class="genre-chip"><input type="radio" name="planGenre" value="dance" /> Dance</label>
+                  <label class="genre-chip"><input type="radio" name="planGenre" value="hiphop" /> Hip hop</label>
+                  <label class="genre-chip"><input type="radio" name="planGenre" value="latin" /> Latin</label>
+                  <label class="genre-chip"><input type="radio" name="planGenre" value="rock" /> Rock</label>
+                  <label class="genre-chip"><input type="radio" name="planGenre" value="upbeat" /> Upbeat</label>
+                </div>
+                <div class="field-error" id="genreError" role="alert"></div>
+              </fieldset>
+            </div>
+
+            <div class="plan-nav plan-nav--step1-submit" id="planNav">
+              <button type="submit" class="primary-btn" id="planNextBtn">GO</button>
+              <button type="button" class="primary-btn" id="planGenreSubmitBtn" hidden>Submit</button>
+              <button type="button" class="secondary-btn" id="planGenreSkipBtn" hidden>Skip</button>
+            </div>
+          </form>
+        </div>
+      </main>
+      <footer class="site-footer" role="contentinfo">
+        <p class="site-footer-copy">&copy; 2026 HatchAndScale.co</p>
+      </footer>
+    </div>
+
+    <div class="results-modal-backdrop" id="resultsModalBackdrop" aria-hidden="true">
+      <div
+        class="results-modal-sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="resultsHeading"
+        aria-describedby="resultsMeta"
+      >
+        <div class="results-modal-scroll">
+          <section class="results glass" id="results" aria-live="polite">
+            <h2 class="results-label" id="resultsHeading">Your Zone 2 Results</h2>
+            <div class="results-models" id="resultsModels"></div>
+            <p class="results-meta" id="resultsMeta"></p>
+            <p class="disclaimer">
+              This is a physiological estimate. Consult a professional for clinical stress testing.
+            </p>
+          </section>
+        </div>
+        <div class="results-modal-footer">
+          <aside class="results-modal-ad-slot" id="resultsModalAdSlot" aria-label="Advertisement">
+            <div class="results-mobile-ad-placeholder" id="resultsMobileAdUnit">
+              Mobile ad unit
+            </div>
+          </aside>
+          <div class="actions" id="resultsModalActions">
+            <button type="button" class="secondary-btn" id="recalculateBtn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                <path d="M3 3v5h5" />
+              </svg>
+              Recalculate
+            </button>
+            <button type="button" class="primary-btn" id="continuePlanBtn">
+              Continue Plan
+            </button>
+            <button type="button" class="primary-btn" id="calculateYoursBtn" hidden>
+              Calculate Yours
+            </button>
           </div>
         </div>
       </div>
-
-      <div class="card-cta">
-        <button type="button" class="btn-share" id="btn-share" onclick="shareZone2()">
-          <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style="flex-shrink:0" aria-hidden="true">
-            <rect x="2.5" y="5.5" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.6"/>
-            <path d="M7.5 1v7M4.5 3.5l3-3 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <span class="btn-share-label">Share my Zone 2</span>
-        </button>
-        <button type="button" class="btn-recalc" onclick="backToForm()">Recalculate</button>
-      </div>
-
-      <div class="zstrip">
-        <div style="background:var(--zone-1)"></div><div style="background:var(--zone-2)"></div>
-        <div style="background:var(--zone-3)"></div><div style="background:var(--zone-4)"></div>
-        <div style="background:var(--zone-5)"></div>
-      </div>
     </div>
-  </div>
-</div>
 
-<!-- ══════════════════════════════════
-     SECTION 02: MEASURE
-══════════════════════════════════ -->
-<div class="section" id="measure">
-  <div class="section-header">
-    <span class="section-num">02</span>
-    <span class="section-title">Measure</span>
-  </div>
-
-  <div class="measure-intro">
-    <h3>Now measure it right.</h3>
-    <p>Knowing your Zone 2 range is step one. Staying in it while you train is step two. And that depends entirely on how you measure heart rate.</p>
-    <p>Wrist-based optical sensors (Apple Watch, Garmin Fenix, Whoop) can lag <strong>30 seconds or more</strong> in steady-state aerobic work. That's enough to drift into Zone 3 without realizing it.</p>
-    <p>A chest strap reads every beat in real time, with ECG-level accuracy. It's what Zone 2 training was designed around.</p>
-  </div>
-
-  <p class="strap-q">Do you train with a chest strap?</p>
-  <div class="toggle-group">
-    <button type="button" class="toggle-btn" id="btn-has-strap" onclick="setHasStrap(true)">Yes, I have one</button>
-    <button type="button" class="toggle-btn active" id="btn-no-strap" onclick="setHasStrap(false)">Not yet</button>
-  </div>
-
-  <div class="tips-card" id="tips-card">
-    <h4>A few things to check.</h4>
-    <ul class="tips-list">
-      <li>Wet the electrodes before each session. Dry skin causes signal dropouts.</li>
-      <li>Wear it snug, just below the pectoral muscles. It should not bounce.</li>
-      <li>In Garmin and Apple Watch: set HR source to the external strap before starting your activity.</li>
-      <li>Give it 2 minutes to stabilize before trusting the reading.</li>
-    </ul>
-  </div>
-
-  <div class="product-grid visible" id="product-grid">
-    <div class="product-card">
-      <div class="product-img">
-        <svg width="90" height="36" viewBox="0 0 90 36" fill="none">
-          <polyline points="0,18 10,18 16,4 23,32 30,12 36,24 42,18 48,18 54,7 62,29 67,14 72,22 78,18 90,18"
-            stroke="#00B4D8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.65"/>
-        </svg>
-      </div>
-      <div class="product-body">
-        <span class="product-badge badge-pick">Editor's pick</span>
-        <p class="product-name">Polar H10</p>
-        <p class="product-desc">Beat-by-beat ECG accuracy. Bluetooth and ANT+. Battery lasts a year.</p>
-        <div class="product-footer">
-          <span class="product-price">~$90</span>
-          <a class="btn-buy" href="#" onclick="return false">Amazon →</a>
-        </div>
+    <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <h2 id="modalTitle">Why Zone 2?</h2>
+        <p>
+          Zone 2 is an aerobic intensity where you can speak in full sentences, build mitochondrial fitness, and improve fat oxidation — without accumulating
+          excessive fatigue.
+        </p>
+        <p>
+          Heart rate zones depend on individual physiology. The <strong>Karvonen</strong> (heart rate reserve) method weights your resting rate so the range reflects your
+          cardiovascular economy more closely than age-only formulas.
+        </p>
+        <p>
+          The <strong>HUNT</strong> option estimates max HR from the HUNT study equation (211 − 0.64 × age, rounded) when you do not have a reliable measured max.
+        </p>
+        <button type="button" class="modal-close" id="modalClose">OK</button>
       </div>
     </div>
 
-    <div class="product-card">
-      <div class="product-img">
-        <svg width="90" height="36" viewBox="0 0 90 36" fill="none">
-          <polyline points="0,18 10,18 16,4 23,32 30,12 36,24 42,18 48,18 54,7 62,29 67,14 72,22 78,18 90,18"
-            stroke="#00B4D8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.65"/>
-        </svg>
-      </div>
-      <div class="product-body">
-        <p class="product-name">Garmin HRM-Pro Plus</p>
-        <p class="product-desc">Stores data on the strap itself. Great for the gym or when you leave your watch behind.</p>
-        <div class="product-footer">
-          <span class="product-price">~$130</span>
-          <a class="btn-buy" href="#" onclick="return false">Amazon →</a>
-        </div>
+    <div class="modal-backdrop" id="bpmInfoModalBackdrop" aria-hidden="true">
+      <div class="modal" id="bpmInfoDialog" role="dialog" aria-modal="true" aria-labelledby="bpmInfoTitle">
+        <h2 id="bpmInfoTitle">Measuring BPM</h2>
+        <p id="bpmInfoBody">
+          Best measured with a chest strap
+          <a id="bpmInfoProductLink" href="#" target="_blank" rel="noopener noreferrer">heart rate monitor</a>.
+        </p>
+        <button type="button" class="modal-close" id="bpmInfoModalClose">OK</button>
       </div>
     </div>
 
-    <div class="product-card">
-      <div class="product-img">
-        <svg width="90" height="36" viewBox="0 0 90 36" fill="none">
-          <polyline points="0,18 10,18 16,4 23,32 30,12 36,24 42,18 48,18 54,7 62,29 67,14 72,22 78,18 90,18"
-            stroke="#00B4D8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.65"/>
-        </svg>
-      </div>
-      <div class="product-body">
-        <span class="product-badge badge-value">Best value</span>
-        <p class="product-name">Wahoo TICKR</p>
-        <p class="product-desc">Accurate, simple, pairs with virtually any app or device. The easiest entry point.</p>
-        <div class="product-footer">
-          <span class="product-price">~$50</span>
-          <a class="btn-buy" href="#" onclick="return false">Amazon →</a>
+    <div class="modal-backdrop" id="calendarExportModalBackdrop" aria-hidden="true">
+      <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="calendarExportModalTitle"
+      >
+        <h2 id="calendarExportModalTitle">Add to calendar</h2>
+        <p>
+          Send this Zone2ForYou session to your calendar. Your zone results are in the title and description; when you picked a playlist, that page is stored as
+          the event URL (and as the location link in Google Calendar).
+        </p>
+        <div class="calendar-export-stack">
+          <button type="button" class="secondary-btn" id="calendarExportGoogleBtn">Google Calendar</button>
+          <button type="button" class="secondary-btn" id="calendarExportAppleBtn">Apple Calendar (iCloud)</button>
+          <button type="button" class="secondary-btn" id="calendarExportDownloadBtn">Download .ics file</button>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <p class="affiliate-note" id="aff-note">Affiliate links. We earn a small commission at no cost to you. It does not affect which products we recommend.</p>
-</div>
-
-<!-- ══════════════════════════════════
-     SECTION 03: TRAIN
-     Curated playlists for Zone 2 sessions.
-     Organized by activity. Built to match Zone 2 effort:
-     flat energy arc, no spikes, 60-minute sessions.
-══════════════════════════════════ -->
-<div class="section" id="train">
-  <div class="section-header">
-    <span class="section-num">03</span>
-    <span class="section-title">Train</span>
-  </div>
-
-  <p class="train-intro">
-    The right soundtrack keeps you in the zone. These playlists are built for Zone 2 effort: consistent energy, no tempo spikes, 60-minute arcs that hold you steady instead of pushing you out.
-  </p>
-
-  <!-- Run -->
-  <div class="activity-group">
-    <div class="activity-header">
-      <div class="activity-icon">🏃</div>
-      <span class="activity-label">Run</span>
-      <span class="activity-count">3 playlists</span>
-    </div>
-    <div class="playlist-grid">
-      <div class="pl-card">
-        <div class="pl-top">
-          <span class="pl-name">Hip Hop &amp; R&amp;B</span>
-          <span class="pl-duration">60 min</span>
-        </div>
-        <p class="pl-desc">Groove-based. Steady soul and R&B energy with a flat arc that holds your pace.</p>
-        <div class="pl-footer">
-          <a class="btn-spotify" href="https://open.spotify.com" target="_blank">Open on Spotify</a>
-        </div>
-      </div>
-      <div class="pl-card">
-        <div class="pl-top">
-          <span class="pl-name">90s Rock Hits</span>
-          <span class="pl-duration">60 min</span>
-        </div>
-        <p class="pl-desc">Anthemic mid-tempo rock. Cinematic opener, steady mid-section, reflective close.</p>
-        <div class="pl-footer">
-          <span class="btn-soon">Coming soon</span>
-        </div>
-      </div>
-      <div class="pl-card">
-        <div class="pl-top">
-          <span class="pl-name">Lo-Fi Focus</span>
-          <span class="pl-duration">60 min</span>
-        </div>
-        <p class="pl-desc">Almost flat arc. 80-95 BPM throughout. For people who prefer focus over energy.</p>
-        <div class="pl-footer">
-          <span class="btn-soon">Coming soon</span>
-        </div>
+        <button type="button" class="modal-close" id="calendarExportModalClose">Close</button>
       </div>
     </div>
-  </div>
 
-  <!-- Ride -->
-  <div class="activity-group">
-    <div class="activity-header">
-      <div class="activity-icon">🚴</div>
-      <span class="activity-label">Ride</span>
-      <span class="activity-count">3 playlists</span>
-    </div>
-    <div class="playlist-grid">
-      <div class="pl-card">
-        <div class="pl-top">
-          <span class="pl-name">Latin</span>
-          <span class="pl-duration">60 min</span>
-        </div>
-        <p class="pl-desc">Salsa to reggaeton arc. Consistent rhythm, good pedal groove throughout.</p>
-        <div class="pl-footer">
-          <a class="btn-spotify" href="https://open.spotify.com" target="_blank">Open on Spotify</a>
-        </div>
-      </div>
-      <div class="pl-card">
-        <div class="pl-top">
-          <span class="pl-name">Afrobeats</span>
-          <span class="pl-duration">60 min</span>
-        </div>
-        <p class="pl-desc">Steady dembow and Afrobeats groove. One of the best genres for steady-state riding.</p>
-        <div class="pl-footer">
-          <span class="btn-soon">Coming soon</span>
-        </div>
-      </div>
-      <div class="pl-card">
-        <div class="pl-top">
-          <span class="pl-name">Electronic / Tropical House</span>
-          <span class="pl-duration">60 min</span>
-        </div>
-        <p class="pl-desc">Melodic house. No hard techno, no aggressive drops. Steady build and ease-out.</p>
-        <div class="pl-footer">
-          <span class="btn-soon">Coming soon</span>
-        </div>
-      </div>
-    </div>
-  </div>
+    <div class="toast" id="toast" role="status"></div>
 
-  <!-- Walk -->
-  <div class="activity-group">
-    <div class="activity-header">
-      <div class="activity-icon">🚶</div>
-      <span class="activity-label">Walk</span>
-      <span class="activity-count">4 playlists</span>
-    </div>
-    <div class="playlist-grid">
-      <div class="pl-card">
-        <div class="pl-top">
-          <span class="pl-name">Lo-Fi Chill</span>
-          <span class="pl-duration">60 min</span>
-        </div>
-        <p class="pl-desc">Meditative throughout. For decompression walks, not performance. Almost flat arc.</p>
-        <div class="pl-footer">
-          <a class="btn-spotify" href="https://open.spotify.com" target="_blank">Open on Spotify</a>
-        </div>
-      </div>
-      <div class="pl-card">
-        <div class="pl-top">
-          <span class="pl-name">Lo-Fi Chill</span>
-          <span class="pl-duration">30 min</span>
-        </div>
-        <p class="pl-desc">Best-of from the 60-min version. For lunch walks or short sessions.</p>
-        <div class="pl-footer">
-          <span class="btn-soon">Coming soon</span>
-        </div>
-      </div>
-      <div class="pl-card">
-        <div class="pl-top">
-          <span class="pl-name">Indie Acoustic</span>
-          <span class="pl-duration">60 min</span>
-        </div>
-        <p class="pl-desc">Quiet opener, warm mid-section, still close. Best for morning or evening walks.</p>
-        <div class="pl-footer">
-          <span class="btn-soon">Coming soon</span>
-        </div>
-      </div>
-      <div class="pl-card">
-        <div class="pl-top">
-          <span class="pl-name">Country</span>
-          <span class="pl-duration">60 min</span>
-        </div>
-        <p class="pl-desc">Narrative storytelling pairs naturally with long walks. Motivational mid-section.</p>
-        <div class="pl-footer">
-          <span class="btn-soon">Coming soon</span>
-        </div>
-      </div>
-    </div>
-  </div>
+    <script>
+      (function () {
+        function gaEvent(eventName, eventParams) {
+          if (typeof gtag === "function") {
+            gtag("event", eventName, eventParams || {});
+          }
+        }
 
-  <p class="pl-coming-note">More playlists coming. Follow <a href="https://open.spotify.com" target="_blank" class="pl-spotify-inline">Zone 2 For You on Spotify</a> to get them as they drop.</p>
-</div>
+        /** HUNT Fitness Study: HRmax ≈ 211 − 0.64 × age (years). */
+        function huntMaxHr(age) {
+          return Math.round(211 - 0.64 * age);
+        }
 
-<!-- ══ Support ══ -->
-<div class="support-wrap">
-  <div class="support-card">
-    <span class="support-icon">☕</span>
-    <h3>If this helped, consider supporting it.</h3>
-    <p>If you got something out of the calculator, a coffee helps keep it going.</p>
-    <a class="btn-bmc" href="https://www.buymeacoffee.com" target="_blank">
-      <!-- Coffee cup icon -->
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M2 5h9v6a3 3 0 01-3 3H5a3 3 0 01-3-3V5z" fill="#1a1a1a" stroke="#1a1a1a" stroke-width=".5"/>
-        <path d="M11 6h1.5a1.5 1.5 0 010 3H11" stroke="#1a1a1a" stroke-width="1.4" stroke-linecap="round"/>
-        <path d="M5 2c0-.6.6-1 1-1.5S7 0 7 .5" stroke="#1a1a1a" stroke-width="1.2" stroke-linecap="round"/>
-      </svg>
-      Buy me a coffee
-    </a>
-  </div>
-  <div class="prefooter-feedback">
-    <p>Found a bug or want a feature? <a href="mailto:feedback@zone2foryou.com?subject=Zone%202%20For%20You%20feedback">Let us know!</a></p>
-  </div>
-</div>
+        /** Karvonen Zone 2: 60–70% of heart rate reserve, integers per spec. */
+        function karvonenZone2(rhr, mhr) {
+          const reserve = mhr - rhr;
+          const low = Math.round(rhr + 0.6 * reserve);
+          const high = Math.round(rhr + 0.7 * reserve);
+          return { low, high };
+        }
 
-<!-- ══ Footer ══ -->
-<footer>
-  <p class="footer-copy">© 2026 Hatch and Scale LLC</p>
-  <p class="footer-disc">Results are estimates based on established formulas. Not medical advice. Consult a physician or certified coach before beginning any heart rate training program.</p>
-</footer>
+        var form = document.getElementById("calcForm");
+        var ageInput = document.getElementById("age");
+        var rhrInput = document.getElementById("rhr");
+        var mhrInput = document.getElementById("mhr");
+        var mhrBlock = document.getElementById("mhrBlock");
+        var resultsHeading = document.getElementById("resultsHeading");
+        var resultsModels = document.getElementById("resultsModels");
+        var resultsMeta = document.getElementById("resultsMeta");
+        var resultsModalBackdrop = document.getElementById("resultsModalBackdrop");
+        var resultsModalSheet = document.querySelector(".results-modal-sheet");
+        var recalculateBtn = document.getElementById("recalculateBtn");
+        var continuePlanBtn = document.getElementById("continuePlanBtn");
+        var resultsModalActions = document.getElementById("resultsModalActions");
+        var calculateYoursBtn = document.getElementById("calculateYoursBtn");
+        var defaultDashboard = document.getElementById("defaultDashboard");
+        var planWorkspace = document.getElementById("planWorkspace");
+        var defaultCalculateBtn = document.getElementById("defaultCalculateBtn");
+        var defaultZoneSummary = document.getElementById("defaultZoneSummary");
+        var defaultCardZoneRange = document.getElementById("defaultZoneRange");
+        var defaultRecalculateLink = document.getElementById("defaultRecalculateLink");
+        var defaultPlanPlaylistWrap = document.getElementById("defaultPlanPlaylistWrap");
+        var defaultPlanPlaylistBtn = document.getElementById("defaultPlanPlaylistBtn");
+        var defaultLogBtn = document.getElementById("defaultLogBtn");
+        var defaultShareBtn = document.getElementById("defaultShareBtn");
+        var defaultDashboardResetWrap = document.getElementById("defaultDashboardResetWrap");
+        var defaultDashboardResetBtn = document.getElementById("defaultDashboardResetBtn");
+        var defaultHintTriggers = document.querySelectorAll(".default-hint-trigger");
+        var planInputSection = document.getElementById("planInputSection");
+        var planGenreSection = document.getElementById("planGenreSection");
+        var planGenreSubmitBtn = document.getElementById("planGenreSubmitBtn");
+        var planGenreSkipBtn = document.getElementById("planGenreSkipBtn");
+        var planNav = document.getElementById("planNav");
+        var planNextBtn = document.getElementById("planNextBtn");
+        var defaultPlanSummary = document.getElementById("defaultPlanSummary");
+        var defaultPlanLaunchLink = document.getElementById("defaultPlanLaunchLink");
+        var defaultPlanSkipNote = document.getElementById("defaultPlanSkipNote");
+        var defaultPlaylistPrefsLink = document.getElementById("defaultPlaylistPrefsLink");
+        var infoBtn = document.getElementById("infoBtn");
+        var modalBackdrop = document.getElementById("modalBackdrop");
+        var modalClose = document.getElementById("modalClose");
+        var bpmInfoModalBackdrop = document.getElementById("bpmInfoModalBackdrop");
+        var bpmInfoModalClose = document.getElementById("bpmInfoModalClose");
+        var calendarExportModalBackdrop = document.getElementById("calendarExportModalBackdrop");
+        var calendarExportModalClose = document.getElementById("calendarExportModalClose");
+        var calendarExportGoogleBtn = document.getElementById("calendarExportGoogleBtn");
+        var calendarExportAppleBtn = document.getElementById("calendarExportAppleBtn");
+        var calendarExportDownloadBtn = document.getElementById("calendarExportDownloadBtn");
+        var bpmInfoProductLink = document.getElementById("bpmInfoProductLink");
+        var bpmInfoButtons = document.querySelectorAll(".bpm-info-btn");
+        var toast = document.getElementById("toast");
 
-<script>
-/* ════════════════════════════════════════════
-   Fitness level state
-   'beginner' | 'intermediate' | 'advanced'
-   Drives Maffetone adjustment and formula priority.
-════════════════════════════════════════════ */
-let fitnessLevel = 'intermediate';
+        var productUrlsFallback = [
+          "https://a.co/d/0hDD3sVa",
+          "https://a.co/d/02ha7Hgy",
+          "https://a.co/d/0aBPwHDe",
+        ];
+        var productUrlsCache = null;
+        var productUrlsPromise = null;
+        var lastBpmInfoTrigger = null;
+        var lastCalendarExportTrigger = null;
+        var hasStartedPlan = false;
+        var latestCalculatedSignature = "";
+        var latestCalculatedData = null;
+        var latestCalculatedMethod = "hunt";
+        var defaultDashboardSummaryMode = false;
+        var planFlowMode = "inputs";
+        var lockedPlaylistGenre = null;
+        var playlistPrefsSignature = "";
 
-function setFitness(level) {
-  fitnessLevel = level;
-  ['beginner', 'intermediate', 'advanced'].forEach(l => {
-    const btn = document.getElementById('fit-' + l);
-    if (btn) btn.classList.toggle('active', l === level);
-  });
-}
+        var PLAN_GENRE_LABELS = {
+          country: "Country",
+          dance: "Dance",
+          hiphop: "Hip hop",
+          latin: "Latin",
+          rock: "Rock",
+          upbeat: "Upbeat",
+        };
 
-/* ════════════════════════════════════════════
-   Formula engine
-   Formulas: Karvonen, Maffetone, % Max HR, 220-Age.
-   Karvonen requires resting HR. Others use age (+ optional actual max HR).
-   Fitness level adjusts Maffetone and shifts formula priority.
-   Consensus: strict intersection first; if none, try dropping one outlier (N-1).
-════════════════════════════════════════════ */
+        function isPlaylistPrefsCompleteForCurrentZone() {
+          return (
+            !!latestCalculatedData &&
+            !!latestCalculatedSignature &&
+            playlistPrefsSignature === latestCalculatedSignature
+          );
+        }
 
-function computeFormulas(age, rhr, maxHR) {
-  const estMax = maxHR || (220 - age);
-  const rows = [];
+        var PLAYLIST_PREFS_STORAGE_KEY = "zone2foryou_playlist_prefs_v1";
+        var ADD_TO_CALENDAR_OPENED_KEY = "zone2foryou_add_to_calendar_opened_v1";
+        var addToCalendarEverOpened = false;
+        try {
+          addToCalendarEverOpened = localStorage.getItem(ADD_TO_CALENDAR_OPENED_KEY) === "1";
+        } catch (err) {
+          addToCalendarEverOpened = false;
+        }
 
-  // Maffetone adjustment: Maffetone himself prescribed ±5 based on training history.
-  // Beginner/rebuilding: −5 (conservative, build aerobic base safely)
-  // Consistent 2+ years making progress: +5 (credit for aerobic adaptation)
-  const mafAdj   = fitnessLevel === 'beginner' ? -5 : fitnessLevel === 'advanced' ? 5 : 0;
-  const mafBase  = 180 - age + mafAdj;
-  const mafHint  = mafAdj ===  5 ? 'Adjusted +5. 2+ years consistent training.'
-                 : mafAdj === -5 ? 'Adjusted \u22125. Building aerobic base safely.'
-                 :                 'Standard aerobic base-building reference.';
+        var SHARE_RESULTS_OPENED_KEY = "zone2foryou_share_results_opened_v1";
+        var shareResultsEverOpened = false;
+        try {
+          shareResultsEverOpened = localStorage.getItem(SHARE_RESULTS_OPENED_KEY) === "1";
+        } catch (err) {
+          shareResultsEverOpened = false;
+        }
 
-  // Karvonen (requires RHR). Most personalized; especially accurate for fit athletes
-  // with a low RHR and tested max HR.
-  if (rhr) {
-    const hrr = estMax - rhr;
-    // Advanced athletes with RHR → Karvonen is most accurate; beginners → Maffetone leads
-    const karPriority = fitnessLevel === 'beginner' ? 2 : 1;
-    rows.push({ id:'karvonen', name:'Karvonen',
-      hint: maxHR ? 'Uses your tested max HR + resting HR. Highest accuracy.'
-                  : 'Uses heart rate reserve. More personalized than age-only formulas.',
-      low: Math.round(hrr * 0.60 + rhr), high: Math.round(hrr * 0.70 + rhr),
-      priority: karPriority, locked: false });
-  } else {
-    rows.push({ id:'karvonen', name:'Karvonen',
-      hint:'Enter resting HR above to unlock. Most personalized formula.',
-      low: null, high: null, priority: 4, locked: true });
-  }
+        function isValidStoredPlaylistGenre(g) {
+          return g === "skipped" || Boolean(PLAN_GENRE_LABELS[g]);
+        }
 
-  // Maffetone. Leads when no RHR, or when beginner (conservative range is intentional)
-  const mafPriority = fitnessLevel === 'beginner' ? 1
-                    : rhr ? 2
-                    : 1;
-  rows.push({ id:'maffetone', name:'Maffetone', hint: mafHint,
-    low: mafBase - 10, high: mafBase,
-    priority: mafPriority, locked: false });
+        function syncPlaylistPrefsFromStorage() {
+          if (!latestCalculatedSignature || !latestCalculatedData) return;
+          try {
+            var raw = localStorage.getItem(PLAYLIST_PREFS_STORAGE_KEY);
+            if (!raw) return;
+            var o = JSON.parse(raw);
+            if (!o || typeof o.signature !== "string" || o.signature !== latestCalculatedSignature) {
+              return;
+            }
+            if (!isValidStoredPlaylistGenre(o.genre)) {
+              clearPlaylistPrefsStorage();
+              return;
+            }
+            lockedPlaylistGenre = o.genre;
+            playlistPrefsSignature = o.signature;
+          } catch (err) {
+            clearPlaylistPrefsStorage();
+          }
+        }
 
-  // % of Max HR. Preferred when tested max HR is known and no RHR
-  const pctPriority = rhr ? 3
-                    : maxHR ? (fitnessLevel === 'advanced' ? 1 : 2)
-                    : 2;
-  rows.push({ id:'pctmax', name:'% of Max HR',
-    hint: maxHR ? 'Based on your tested max HR. Reliable when max is confirmed.'
-                : 'Based on estimated max HR (220 \u2212 Age). Add your actual max above for accuracy.',
-    low: Math.round(estMax * 0.65), high: Math.round(estMax * 0.75),
-    priority: pctPriority, locked: false });
+        function persistPlaylistPrefsToStorage() {
+          try {
+            if (
+              !latestCalculatedSignature ||
+              playlistPrefsSignature !== latestCalculatedSignature ||
+              !lockedPlaylistGenre ||
+              !isValidStoredPlaylistGenre(lockedPlaylistGenre)
+            ) {
+              localStorage.removeItem(PLAYLIST_PREFS_STORAGE_KEY);
+              return;
+            }
+            localStorage.setItem(
+              PLAYLIST_PREFS_STORAGE_KEY,
+              JSON.stringify({ signature: playlistPrefsSignature, genre: lockedPlaylistGenre })
+            );
+          } catch (err) {}
+        }
 
-  // 220 − Age. Least personalized; deprioritized for advanced athletes over ~45
-  // because estimated max HR commonly underestimates for trained older athletes.
-  const ageNote = (age > 45 && fitnessLevel === 'advanced')
-    ? '220 \u2212 Age tends to underestimate max HR for fit athletes over 45'
-    : 'Widely used starting point; less accurate for fit or older athletes';
-  rows.push({ id:'age220', name:'220 \u2212 Age', hint: ageNote,
-    low: Math.round((220 - age) * 0.60), high: Math.round((220 - age) * 0.70),
-    priority: rhr ? 5 : 3, locked: false });
+        function clearPlaylistPrefsStorage() {
+          try {
+            localStorage.removeItem(PLAYLIST_PREFS_STORAGE_KEY);
+          } catch (err) {}
+        }
 
-  rows.sort((a, b) => a.priority - b.priority);
-  const first = rows.find(r => !r.locked);
-  if (first) first.featured = true;
-  return rows;
-}
+        function getPlaylistLowHref(genreId) {
+          if (!genreId || genreId === "skipped") return "#";
+          return "playlists/" + genreId + "-low.html";
+        }
 
-function computeConsensus(formulas) {
-  const unlocked = formulas.filter(f => !f.locked);
+        function getInputSignature(method, data) {
+          var m = method === "hunt" ? "hunt" : "karvonen";
+          return [m, data.age, data.rhr, m === "karvonen" ? data.mhr : "auto"].join("|");
+        }
 
-  // Try strict intersection of all
-  const sLo = Math.max(...unlocked.map(f => f.low));
-  const sHi = Math.min(...unlocked.map(f => f.high));
-  if (sLo <= sHi) {
-    return { low: sLo, high: sHi, note: 'All formulas overlap in this range.' };
-  }
+        function getCurrentInputSignature() {
+          var age = parseInt(ageInput.value, 10);
+          var rhr = parseInt(rhrInput.value, 10);
+          var m = getMethod();
+          var mhr = m === "hunt" ? "auto" : parseInt(mhrInput.value, 10);
+          return [m, age, rhr, mhr].join("|");
+        }
 
-  // No strict overlap. Try dropping one formula at a time
-  let best = null;
-  const n = unlocked.length;
-  for (let i = 0; i < n; i++) {
-    const sub = unlocked.filter((_, j) => j !== i);
-    const lo = Math.max(...sub.map(f => f.low));
-    const hi = Math.min(...sub.map(f => f.high));
-    if (lo <= hi && (!best || (hi - lo) > (best.high - best.low))) {
-      best = {
-        low: lo,
-        high: hi,
-        note: 'This band is where ' + (n - 1) + ' of ' + n + ' formula ranges overlap.'
-      };
-    }
-  }
-  if (best) return best;
+        function hasAnyInputValue() {
+          return (
+            String(ageInput.value || "").trim() !== "" ||
+            String(rhrInput.value || "").trim() !== "" ||
+            String(mhrInput.value || "").trim() !== ""
+          );
+        }
 
-  // Complete divergence. Use midpoint of medians as a reasonable estimate
-  const mids = unlocked.map(f => Math.round((f.low + f.high) / 2)).sort((a,b)=>a-b);
-  const center = mids[Math.floor(mids.length / 2)];
-  return {
-    low: center - 3,
-    high: center + 3,
-    note: 'No shared overlap across all formulas. This midpoint is a practical estimate from the ranges above.'
-  };
-}
+        function updateDefaultDashboardZoneSummary(showDefaultDashboard) {
+          if (!defaultZoneSummary || !defaultCardZoneRange || !defaultCalculateBtn) return;
+          if (!showDefaultDashboard) {
+            defaultCalculateBtn.hidden = false;
+            defaultZoneSummary.hidden = true;
+            return;
+          }
+          var summaryMode = defaultDashboardSummaryMode && latestCalculatedData;
+          defaultCalculateBtn.hidden = summaryMode;
+          defaultZoneSummary.hidden = !summaryMode;
+          if (summaryMode) {
+            var s = getPlanSummary(latestCalculatedData, latestCalculatedMethod);
+            var rangeLabel = s.zone.low + " - " + s.zone.high + " BPM";
+            defaultCardZoneRange.textContent = rangeLabel;
+            defaultCardZoneRange.setAttribute(
+              "aria-label",
+              "Open full zone comparison results. Current range: " + rangeLabel + "."
+            );
+          }
+        }
 
-function computeScale(formulas) {
-  const unlocked = formulas.filter(f => !f.locked);
-  const rawMin = Math.min(...unlocked.map(f => f.low));
-  const rawMax = Math.max(...unlocked.map(f => f.high));
-  return {
-    min: Math.floor((rawMin - 8) / 10) * 10,
-    max: Math.ceil((rawMax  + 8) / 10) * 10
-  };
-}
+        function updateDefaultDashboardPlanSummary() {
+          if (!defaultPlanSummary || !defaultPlanLaunchLink || !defaultPlanSkipNote) return;
+          var show =
+            defaultDashboardSummaryMode === true &&
+            !!latestCalculatedData &&
+            isPlaylistPrefsCompleteForCurrentZone();
+          defaultPlanSummary.hidden = !show;
+          if (!show) {
+            defaultPlanLaunchLink.hidden = true;
+            defaultPlanSkipNote.hidden = true;
+            defaultPlanLaunchLink.setAttribute("href", "#");
+            return;
+          }
+          if (lockedPlaylistGenre === "skipped") {
+            defaultPlanLaunchLink.hidden = true;
+            defaultPlanSkipNote.hidden = false;
+            defaultPlanSkipNote.textContent =
+              "No genre locked. Tap Change genre when you want a BPM-matched pick.";
+          } else {
+            defaultPlanSkipNote.hidden = true;
+            defaultPlanLaunchLink.hidden = false;
+            var label = PLAN_GENRE_LABELS[lockedPlaylistGenre] || lockedPlaylistGenre || "";
+            defaultPlanLaunchLink.textContent = "Launch " + label + " Playlist";
+            defaultPlanLaunchLink.href = getPlaylistLowHref(lockedPlaylistGenre);
+          }
+        }
 
-/** Percent along chart track (same scale as axis ticks and formula bars). */
-function pctOnScale(bpm, s) {
-  return ((bpm - s.min) / (s.max - s.min)) * 100;
-}
-function widthPct(lo, hi, s) {
-  return ((hi - lo) / (s.max - s.min)) * 100;
-}
+        function updateDefaultDashboardPlanActions() {
+          var active = !!latestCalculatedData;
+          var hideChoosePlaylist = isPlaylistPrefsCompleteForCurrentZone();
+          if (defaultPlanPlaylistWrap) {
+            defaultPlanPlaylistWrap.hidden = hideChoosePlaylist;
+          }
+          if (defaultPlanPlaylistBtn) {
+            defaultPlanPlaylistBtn.disabled = !active || hideChoosePlaylist;
+            defaultPlanPlaylistBtn.classList.toggle(
+              "secondary-btn--zone-ready",
+              active && !hideChoosePlaylist
+            );
+          }
+          if (defaultLogBtn) {
+            defaultLogBtn.disabled = !active || !isPlaylistPrefsCompleteForCurrentZone();
+            defaultLogBtn.classList.toggle(
+              "secondary-btn--zone-ready",
+              active && isPlaylistPrefsCompleteForCurrentZone() && !addToCalendarEverOpened
+            );
+          }
+          if (defaultShareBtn) {
+            defaultShareBtn.disabled = !active;
+            defaultShareBtn.classList.toggle(
+              "secondary-btn--zone-ready",
+              active && addToCalendarEverOpened
+            );
+          }
+        }
 
-function layoutFormulaBarLabels() {
-  requestAnimationFrame(() => {
-    document.querySelectorAll('.b-slot').forEach(slot => {
-      const visual = slot.querySelector('.b-visual');
-      const inner = slot.querySelector('.b-value--inside .bv-range');
-      if (!visual || !inner) return;
-      const ba = slot.closest('.ba');
-      if (!ba) return;
-      slot.classList.remove('is-narrow', 'b-slot--left', 'b-slot--right', 'b-slot--below');
-      const barW = visual.clientWidth;
-      const tw = inner.scrollWidth;
-      const pad = 8;
-      if (tw <= barW - pad) return;
-      slot.classList.add('is-narrow');
-      const baRect = ba.getBoundingClientRect();
-      const slotRect = slot.getBoundingClientRect();
-      const spaceLeft = slotRect.left - baRect.left;
-      const spaceRight = baRect.right - slotRect.right;
-      if (spaceRight >= tw + pad) {
-        slot.classList.add('b-slot--right');
-      } else if (spaceLeft >= tw + pad) {
-        slot.classList.add('b-slot--left');
-      } else {
-        slot.classList.add('b-slot--below');
-      }
-    });
-  });
-}
+        function persistAddToCalendarOpened() {
+          if (addToCalendarEverOpened) return;
+          addToCalendarEverOpened = true;
+          try {
+            localStorage.setItem(ADD_TO_CALENDAR_OPENED_KEY, "1");
+          } catch (err) {}
+          updateDefaultDashboardPlanActions();
+        }
 
-async function shareZone2() {
-  const loEl = document.getElementById('ss-n-lo');
-  const hiEl = document.getElementById('ss-n-hi');
-  const btn = document.getElementById('btn-share');
-  const label = btn && btn.querySelector('.btn-share-label');
-  if (!loEl || !hiEl || !btn || !label) return;
-  const lo = loEl.textContent.trim();
-  const hi = hiEl.textContent.trim();
-  const text = 'My Zone 2 range (Zone 2 For You): ' + lo + '-' + hi + ' bpm';
-  const url = window.location.href.split('#')[0];
-  try {
-    if (navigator.share) {
-      await navigator.share({ title: 'Zone 2 For You', text: text, url: url });
-      return;
-    }
-  } catch (e) {
-    if (e && e.name === 'AbortError') return;
-  }
-  const full = text + (url ? '\n' + url : '');
-  try {
-    await navigator.clipboard.writeText(full);
-    const prev = label.textContent;
-    label.textContent = 'Copied to clipboard';
-    btn.disabled = true;
-    setTimeout(() => {
-      label.textContent = prev;
-      btn.disabled = false;
-    }, 2200);
-    return;
-  } catch (e) {
-    /* clipboard may be unavailable */
-  }
-  window.prompt('Copy this text:', full);
-}
+        function persistShareResultsOpened() {
+          if (shareResultsEverOpened) return;
+          shareResultsEverOpened = true;
+          try {
+            localStorage.setItem(SHARE_RESULTS_OPENED_KEY, "1");
+          } catch (err) {}
+          updateDefaultDashboardResetLink();
+        }
 
-/* ════════════════════════════════════════════
-   Render the chart
-════════════════════════════════════════════ */
-function renderChart(formulas, consensus, scale) {
-  const ticks = [];
-  for (let b = scale.min; b <= scale.max; b += 10) ticks.push(b);
+        function isDefaultDashboardAllStepsComplete() {
+          return (
+            !!latestCalculatedData &&
+            isPlaylistPrefsCompleteForCurrentZone() &&
+            addToCalendarEverOpened &&
+            shareResultsEverOpened
+          );
+        }
 
-  document.getElementById('axis-inner').innerHTML = ticks.map(b =>
-    `<span class="axis-tick" style="left:${pctOnScale(b, scale)}%">${b}</span>`
-  ).join('');
+        function updateDefaultDashboardResetLink() {
+          if (!defaultDashboardResetWrap) return;
+          defaultDashboardResetWrap.hidden = !isDefaultDashboardAllStepsComplete();
+        }
 
-  const gls = ticks.map(b =>
-    `<div class="gl" style="left:${pctOnScale(b, scale)}%"></div>`
-  ).join('');
-  const colL = pctOnScale(consensus.low, scale);
-  const colW = widthPct(consensus.low, consensus.high, scale);
-  const col = `<div class="consensus-col" style="left:${colL}%;width:${colW}%"></div>`;
+        function clearResultsFromUrlBar() {
+          try {
+            var u = new URL(window.location.href);
+            u.search = "";
+            history.replaceState(null, "", u.pathname + u.hash);
+          } catch (err) {}
+        }
 
-  document.getElementById('formula-rows').innerHTML = formulas.map(f => {
-    if (f.locked) {
-      return `
-      <div class="row locked">
-        <div class="meta"><span class="fn">${f.name}</span><span class="fhint">${f.hint}</span></div>
-        <div class="ba">${col}${gls}</div>
-      </div>`;
-    }
-    const bL = pctOnScale(f.low, scale);
-    const bW = widthPct(f.low, f.high, scale);
-    const rangeText = f.low + ' - ' + f.high;
-    return `
-      <div class="row ${f.featured ? 'featured' : ''}">
-        <div class="meta">
-          <span class="fn">${f.name}</span>
-          ${f.featured ? '<span class="tag tag-best">Best for you</span>' : ''}
-          <span class="fhint">${f.hint}</span>
-        </div>
-        <div class="ba">
-          ${col}${gls}
-          <div class="bt">
-            <div class="b-slot" style="left:${bL}%;width:${bW}%">
-              <div class="b-visual"></div>
-              <div class="b-value b-value--inside"><span class="bv-range">${rangeText}</span></div>
-              <div class="b-value b-value--outside"><span class="bv-range">${rangeText}</span></div>
-            </div>
-          </div>
-        </div>
-      </div>`;
-  }).join('');
+        function resetStartOverFromDashboard() {
+          closeResultsModal();
+          if (calendarExportModalBackdrop && calendarExportModalBackdrop.classList.contains("open")) {
+            setCalendarExportModal(false);
+          }
+          latestCalculatedSignature = "";
+          latestCalculatedData = null;
+          latestCalculatedMethod = "hunt";
+          lockedPlaylistGenre = null;
+          playlistPrefsSignature = "";
+          clearPlaylistPrefsStorage();
+          addToCalendarEverOpened = false;
+          shareResultsEverOpened = false;
+          try {
+            localStorage.removeItem(ADD_TO_CALENDAR_OPENED_KEY);
+            localStorage.removeItem(SHARE_RESULTS_OPENED_KEY);
+          } catch (err) {}
+          ageInput.value = "";
+          rhrInput.value = "";
+          mhrInput.value = "";
+          showError(ageError, "");
+          showError(rhrError, "");
+          showError(mhrError, "");
+          showError(genreError, "");
+          form.querySelectorAll('input[name="planGenre"]').forEach(function (r) {
+            r.checked = false;
+          });
+          syncMhrVisibility();
+          clearResultsFromUrlBar();
+          defaultDashboardSummaryMode = false;
+          hasStartedPlan = false;
+          planFlowMode = "inputs";
+          syncPlanUi();
+          requestAnimationFrame(function () {
+            if (defaultCalculateBtn) defaultCalculateBtn.focus();
+          });
+        }
 
-  const ssL = pctOnScale(consensus.low, scale);
-  const ssW = widthPct(consensus.low, consensus.high, scale);
-  const bar = document.getElementById('ss-bar');
-  bar.style.left = ssL + '%';
-  bar.style.width = ssW + '%';
+        function syncEntryStateUi() {
+          if (!defaultDashboard || !planWorkspace) return;
+          var freshLanding = !hasStartedPlan && !hasAnyInputValue() && !latestCalculatedData;
+          var summaryAtHome = defaultDashboardSummaryMode === true && latestCalculatedData;
+          var showDefault = freshLanding || summaryAtHome;
+          defaultDashboard.hidden = !showDefault;
+          planWorkspace.hidden = showDefault;
+          updateDefaultDashboardZoneSummary(showDefault);
+          updateDefaultDashboardPlanSummary();
+          updateDefaultDashboardPlanActions();
+          updateDefaultDashboardResetLink();
+        }
 
-  const bpmL = document.getElementById('ss-bpm-l');
-  bpmL.textContent = consensus.low;
-  bpmL.style.top = '50%';
-  bpmL.style.left = ssL + '%';
+        function syncPlanWorkspaceMode() {
+          if (!planNav) return;
+          var genre = planFlowMode === "genre";
+          if (planInputSection) planInputSection.hidden = genre;
+          if (planGenreSection) planGenreSection.hidden = !genre;
+          if (genre) {
+            planNav.classList.remove("plan-nav--step1-submit");
+            planNav.classList.add("plan-nav--genre-actions");
+            if (planNextBtn) planNextBtn.hidden = true;
+            if (planGenreSubmitBtn) planGenreSubmitBtn.hidden = false;
+            if (planGenreSkipBtn) planGenreSkipBtn.hidden = false;
+          } else {
+            planNav.classList.add("plan-nav--step1-submit");
+            planNav.classList.remove("plan-nav--genre-actions");
+            if (planNextBtn) planNextBtn.hidden = false;
+            if (planGenreSubmitBtn) planGenreSubmitBtn.hidden = true;
+            if (planGenreSkipBtn) planGenreSkipBtn.hidden = true;
+          }
+        }
 
-  const bpmR = document.getElementById('ss-bpm-r');
-  bpmR.textContent = consensus.high;
-  bpmR.style.top = '50%';
-  bpmR.style.left = (ssL + ssW) + '%';
+        function syncPlanUi() {
+          if (planNextBtn && planFlowMode !== "genre") {
+            planNextBtn.hidden = false;
+            planNextBtn.textContent = "GO";
+          }
+          if (planInputSection && planFlowMode !== "genre") planInputSection.hidden = false;
+          if (planNav && planFlowMode !== "genre") planNav.classList.add("plan-nav--step1-submit");
+          syncPlanWorkspaceMode();
+          syncEntryStateUi();
+        }
 
-  document.getElementById('ss-n-lo').textContent = consensus.low;
-  document.getElementById('ss-n-hi').textContent = consensus.high;
-  document.getElementById('ss-hint').textContent = consensus.note;
+        function returnToOnboardingAfterResults() {
+          closeResultsModal();
+          defaultDashboardSummaryMode = true;
+          hasStartedPlan = false;
+          planFlowMode = "inputs";
+          syncPlanUi();
+          requestAnimationFrame(function () {
+            if (defaultRecalculateLink) defaultRecalculateLink.focus();
+          });
+        }
 
-  layoutFormulaBarLabels();
-  requestAnimationFrame(() => {
-    layoutFormulaBarLabels();
-  });
-}
+        function enterGenreFlow() {
+          if (!latestCalculatedData) return;
+          defaultDashboardSummaryMode = false;
+          hasStartedPlan = true;
+          planFlowMode = "genre";
+          showError(genreError, "");
+          var radios = form.querySelectorAll('input[name="planGenre"]');
+          var canPreselect =
+            lockedPlaylistGenre &&
+            lockedPlaylistGenre !== "skipped" &&
+            playlistPrefsSignature === latestCalculatedSignature;
+          radios.forEach(function (r) {
+            r.checked = Boolean(canPreselect && r.value === lockedPlaylistGenre);
+          });
+          syncPlanUi();
+          requestAnimationFrame(function () {
+            var first = form.querySelector('input[name="planGenre"]');
+            if (first) first.focus();
+          });
+        }
 
-/* ════════════════════════════════════════════
-   Calculate. Hides form, shows results
-════════════════════════════════════════════ */
-function calculate() {
-  const ageVal   = document.getElementById('age').value.trim();
-  const rhrVal   = document.getElementById('rhr').value.trim();
-  const maxHRVal = document.getElementById('maxhr').value.trim();
+        function finishGenreFlow(submit, genreId) {
+          if (!latestCalculatedSignature) return;
+          if (submit) {
+            lockedPlaylistGenre = genreId;
+          } else {
+            lockedPlaylistGenre = "skipped";
+          }
+          playlistPrefsSignature = latestCalculatedSignature;
+          planFlowMode = "inputs";
+          defaultDashboardSummaryMode = true;
+          hasStartedPlan = false;
+          showError(genreError, "");
+          persistPlaylistPrefsToStorage();
+          syncPlanUi();
+          requestAnimationFrame(function () {
+            if (submit && genreId && defaultPlanLaunchLink && !defaultPlanLaunchLink.hidden) {
+              defaultPlanLaunchLink.focus();
+            } else if (
+              defaultPlanPlaylistWrap &&
+              !defaultPlanPlaylistWrap.hidden &&
+              defaultPlanPlaylistBtn
+            ) {
+              defaultPlanPlaylistBtn.focus();
+            } else if (defaultPlaylistPrefsLink) {
+              defaultPlaylistPrefsLink.focus();
+            }
+          });
+        }
 
-  const age   = parseInt(ageVal);
-  const rhr   = rhrVal   ? parseInt(rhrVal)   : null;
-  const maxHR = maxHRVal ? parseInt(maxHRVal) : null;
+        function getPlanSummary(data, method) {
+          var m = method === "hunt" ? "hunt" : "karvonen";
+          var baseZone = karvonenZone2(data.rhr, data.mhr);
+          var finalZone = { low: baseZone.low, high: baseZone.high };
+          var summaryText = "Estimated from your current inputs.";
+          if (m === "karvonen") {
+            var huntMhr = huntMaxHr(data.age);
+            var huntZone = karvonenZone2(data.rhr, huntMhr);
+            var overlapLow = Math.max(baseZone.low, huntZone.low);
+            var overlapHigh = Math.min(baseZone.high, huntZone.high);
+            if (overlapLow <= overlapHigh) {
+              finalZone = { low: overlapLow, high: overlapHigh };
+              summaryText = "Overlap band between your entered max HR and HUNT estimate.";
+            } else {
+              summaryText = "Models do not overlap; using your entered-max scenario for this action plan.";
+            }
+          } else {
+            summaryText = "HUNT-estimated max HR with your resting HR.";
+          }
+          return { zone: finalZone, summaryText: summaryText };
+        }
 
-  if (!age || age < 15 || age > 80) { document.getElementById('age').focus(); return; }
+        function icsEscapeText(s) {
+          return String(s)
+            .replace(/\\/g, "\\\\")
+            .replace(/\n/g, "\\n")
+            .replace(/;/g, "\\;")
+            .replace(/,/g, "\\,");
+        }
 
-  const formulas  = computeFormulas(age, rhr, maxHR);
-  const consensus = computeConsensus(formulas);
-  const scale     = computeScale(formulas);
+        function getPlaylistAbsoluteUrlForCalendar() {
+          if (!isPlaylistPrefsCompleteForCurrentZone()) return null;
+          if (lockedPlaylistGenre === "skipped") return null;
+          try {
+            return new URL(getPlaylistLowHref(lockedPlaylistGenre), window.location.href).href;
+          } catch (err) {
+            return null;
+          }
+        }
 
-  renderChart(formulas, consensus, scale);
+        function pad2(num) {
+          return String(num).padStart(2, "0");
+        }
 
-  // Chips
-  document.getElementById('chips').innerHTML = [
-    `<span class="chip">Age ${age}</span>`,
-    rhr   ? `<span class="chip">RHR ${rhr} bpm</span>`     : `<span class="chip">RHR estimated</span>`,
-    maxHR ? `<span class="chip">Max HR ${maxHR} bpm</span>` : `<span class="chip">Max HR estimated</span>`
-  ].join('');
+        function toIcsUtcDate(d) {
+          return (
+            d.getUTCFullYear() +
+            pad2(d.getUTCMonth() + 1) +
+            pad2(d.getUTCDate()) +
+            "T" +
+            pad2(d.getUTCHours()) +
+            pad2(d.getUTCMinutes()) +
+            pad2(d.getUTCSeconds()) +
+            "Z"
+          );
+        }
 
-  // Swap form → results
-  document.getElementById('form-card').classList.add('hidden');
-  const results = document.getElementById('results');
-  results.classList.add('visible');
-  setTimeout(() => results.scrollIntoView({ behavior:'smooth', block:'nearest' }), 80);
+        function toGoogleCalendarDateRange(start, end) {
+          return toIcsUtcDate(start) + "/" + toIcsUtcDate(end);
+        }
 
-}
+        function buildCalendarPlanModel() {
+          var summary = getPlanSummary(latestCalculatedData, latestCalculatedMethod);
+          var now = new Date();
+          var end = new Date(now.getTime() + 45 * 60 * 1000);
+          var title = "Zone2ForYou Plan " + summary.zone.low + "-" + summary.zone.high + " BPM";
+          var musicNote = "";
+          if (isPlaylistPrefsCompleteForCurrentZone()) {
+            if (lockedPlaylistGenre === "skipped") {
+              musicNote = " Music: any genre.";
+            } else {
+              musicNote =
+                " Music: " + (PLAN_GENRE_LABELS[lockedPlaylistGenre] || lockedPlaylistGenre) + ".";
+            }
+          }
+          var details =
+            "Zone 2 target: " +
+            summary.zone.low +
+            "-" +
+            summary.zone.high +
+            " BPM. " +
+            summary.summaryText +
+            musicNote;
+          return {
+            summary: summary,
+            start: now,
+            end: end,
+            title: title,
+            details: details,
+            playlistUrl: getPlaylistAbsoluteUrlForCalendar(),
+          };
+        }
 
-function backToForm() {
-  document.getElementById('results').classList.remove('visible');
-  document.getElementById('form-card').classList.remove('hidden');
-  document.getElementById('calculate').scrollIntoView({ behavior:'smooth', block:'start' });
-}
+        function buildCalendarPlanIcs(model) {
+          var lines = [
+            "BEGIN:VCALENDAR",
+            "VERSION:2.0",
+            "PRODID:-//Zone2ForYou//EN",
+            "BEGIN:VEVENT",
+            "UID:zone2foryou-" + Date.now() + "@zone2foryou.com",
+            "DTSTAMP:" + toIcsUtcDate(new Date()),
+            "DTSTART:" + toIcsUtcDate(model.start),
+            "DTEND:" + toIcsUtcDate(model.end),
+            "SUMMARY:" + icsEscapeText(model.title),
+            "DESCRIPTION:" + icsEscapeText(model.details),
+          ];
+          if (model.playlistUrl) {
+            lines.push("URL:" + model.playlistUrl);
+          }
+          lines.push("END:VEVENT", "END:VCALENDAR");
+          return lines.join("\r\n") + "\r\n";
+        }
 
-/* ════════════════════════════════════════════
-   Step indicator. Scroll-driven via IntersectionObserver
-   Steps fill cyan with ✓ as the user scrolls into each section.
-════════════════════════════════════════════ */
-const sectionOrder = ['calculate', 'measure', 'train'];
+        function openGoogleCalendarForPlan(model) {
+          var params = new URLSearchParams({
+            action: "TEMPLATE",
+            text: model.title,
+            dates: toGoogleCalendarDateRange(model.start, model.end),
+            details: model.details,
+          });
+          if (model.playlistUrl) {
+            params.set("location", model.playlistUrl);
+          }
+          var w = window.open(
+            "https://calendar.google.com/calendar/render?" + params.toString(),
+            "_blank",
+            "noopener,noreferrer"
+          );
+          return Boolean(w);
+        }
 
-function setStepState(stepNum, state) {
-  const el = document.getElementById(`step-${stepNum}`);
-  if (state === 'done') {
-    el.className = 'step step--done';
-    el.querySelector('.step-icon').textContent = '✓';
-    if (stepNum < 3) document.getElementById(`conn-${stepNum}-${stepNum+1}`).classList.add('step-conn--done');
-  } else if (state === 'current') {
-    if (!el.classList.contains('step--done')) {
-      el.className = 'step step--current';
-    }
-  }
-}
+        function openIcsBlobInNewWindow(ics) {
+          var blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+          var url = URL.createObjectURL(blob);
+          var opened = window.open(url, "_blank", "noopener,noreferrer");
+          if (!opened) {
+            URL.revokeObjectURL(url);
+            showToast("Pop-up blocked. Use Download .ics instead.");
+            return false;
+          }
+          setTimeout(function () {
+            URL.revokeObjectURL(url);
+          }, 120000);
+          return true;
+        }
 
-const stepObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (!entry.isIntersecting) return;
-    const idx = sectionOrder.indexOf(entry.target.id);
-    if (idx === -1) return;
-    const stepNum = idx + 1;
-    // All prior steps → done
-    for (let i = 1; i < stepNum; i++) setStepState(i, 'done');
-    // This step → current (if not already done)
-    setStepState(stepNum, 'current');
-  });
-}, {
-  /* Fires when the top of a section crosses into the upper 40% of the viewport */
-  rootMargin: '0px 0px -60% 0px',
-  threshold: 0
-});
+        function downloadIcsFile(ics, filename) {
+          var blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement("a");
+          a.href = url;
+          a.download = filename || "zone2foryou-plan.ics";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }
 
-window.addEventListener('DOMContentLoaded', () => {
-  sectionOrder.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) stepObserver.observe(el);
-  });
-});
+        function setCalendarExportModal(open) {
+          if (!calendarExportModalBackdrop) return;
+          calendarExportModalBackdrop.classList.toggle("open", open);
+          calendarExportModalBackdrop.setAttribute("aria-hidden", open ? "false" : "true");
+          if (open) {
+            gaEvent("zoneyou_modal_open", { modal: "calendar_export" });
+            if (calendarExportGoogleBtn) calendarExportGoogleBtn.focus();
+          } else if (lastCalendarExportTrigger) {
+            lastCalendarExportTrigger.focus();
+            lastCalendarExportTrigger = null;
+          } else if (defaultLogBtn) {
+            defaultLogBtn.focus();
+          }
+        }
 
-let resizeBarLabelTimer;
-window.addEventListener('resize', () => {
-  clearTimeout(resizeBarLabelTimer);
-  resizeBarLabelTimer = setTimeout(layoutFormulaBarLabels, 100);
-});
+        function openCalendarExportModal() {
+          if (!latestCalculatedData) {
+            showToast("Calculate your results before pushing to calendar.");
+            hasStartedPlan = true;
+            syncPlanUi();
+            ageInput.focus();
+            return;
+          }
+          if (!isPlaylistPrefsCompleteForCurrentZone()) {
+            showToast("Choose a playlist genre or skip before adding to your calendar.");
+            return;
+          }
+          lastCalendarExportTrigger = defaultLogBtn;
+          persistAddToCalendarOpened();
+          setCalendarExportModal(true);
+        }
 
-/* ════════════════════════════════════════════
-   Measure toggle
-════════════════════════════════════════════ */
-function setHasStrap(hasOne) {
-  document.getElementById('btn-has-strap').classList.toggle('active',  hasOne);
-  document.getElementById('btn-no-strap').classList.toggle('active', !hasOne);
-  document.getElementById('tips-card').classList.toggle('visible',  hasOne);
-  document.getElementById('product-grid').classList.toggle('visible', !hasOne);
-  document.getElementById('aff-note').style.display = hasOne ? 'none' : '';
+        function exportCalendarPlan(destination) {
+          if (!latestCalculatedData || !isPlaylistPrefsCompleteForCurrentZone()) return;
+          var model = buildCalendarPlanModel();
+          var ics = buildCalendarPlanIcs(model);
+          var keepModalOpen = false;
+          if (destination === "google") {
+            if (openGoogleCalendarForPlan(model)) {
+              showToast("Google Calendar opened in a new tab.");
+            } else {
+              showToast("Pop-up blocked. Allow pop-ups for this site, or use Download .ics.");
+              keepModalOpen = true;
+            }
+          } else if (destination === "apple") {
+            if (openIcsBlobInNewWindow(ics)) {
+              showToast("If nothing opened, use Download .ics.");
+            } else {
+              keepModalOpen = true;
+            }
+          } else if (destination === "download") {
+            downloadIcsFile(ics, "zone2foryou-plan.ics");
+            showToast("Calendar event downloaded.");
+          }
+          gaEvent("zoneyou_calendar_export", {
+            source: "default_dashboard",
+            destination: destination,
+            method: latestCalculatedMethod,
+            zone_low: model.summary.zone.low,
+            zone_high: model.summary.zone.high,
+            has_playlist_url: Boolean(model.playlistUrl),
+            completed: !keepModalOpen,
+          });
+          if (!keepModalOpen) {
+            setCalendarExportModal(false);
+          }
+        }
 
-}
+        function markPlanDirtyIfNeeded() {
+          if (!latestCalculatedSignature) return;
+          if (getCurrentInputSignature() === latestCalculatedSignature) return;
+          latestCalculatedSignature = "";
+          latestCalculatedData = null;
+          latestCalculatedMethod = getMethod();
+          lockedPlaylistGenre = null;
+          playlistPrefsSignature = "";
+          clearPlaylistPrefsStorage();
+          planFlowMode = "inputs";
+          defaultDashboardSummaryMode = false;
+          if (resultsModalBackdrop.classList.contains("open")) {
+            closeResultsModal();
+            showToast("Inputs updated. Tap GO to refresh your results.");
+          }
+          syncPlanUi();
+        }
 
-/* Auto-calculate with pre-filled values on load */
-window.addEventListener('DOMContentLoaded', calculate);
-</script>
-</body>
+        function parseProductUrls(text) {
+          return text
+            .split(/\r?\n/)
+            .map(function (line) {
+              return line.trim();
+            })
+            .filter(function (line) {
+              return /^https?:\/\//i.test(line);
+            });
+        }
+
+        function loadProductUrls() {
+          if (productUrlsCache && productUrlsCache.length) {
+            return Promise.resolve(productUrlsCache);
+          }
+          if (productUrlsPromise) return productUrlsPromise;
+          productUrlsPromise = fetch("products.txt")
+            .then(function (res) {
+              if (!res.ok) throw new Error("bad response");
+              return res.text();
+            })
+            .then(function (text) {
+              var urls = parseProductUrls(text);
+              productUrlsCache = urls.length ? urls : productUrlsFallback.slice();
+              return productUrlsCache;
+            })
+            .catch(function () {
+              productUrlsCache = productUrlsFallback.slice();
+              return productUrlsCache;
+            });
+          return productUrlsPromise;
+        }
+
+        function pickRandomProductUrl(urls) {
+          var i = Math.floor(Math.random() * urls.length);
+          return urls[i];
+        }
+
+        function setBpmInfoModal(open, hintType) {
+          bpmInfoModalBackdrop.classList.toggle("open", open);
+          bpmInfoModalBackdrop.setAttribute("aria-hidden", open ? "false" : "true");
+          if (open) {
+            gaEvent("zoneyou_modal_open", {
+              modal: "bpm_info",
+              hint_type: hintType || "unknown",
+            });
+            bpmInfoModalClose.focus();
+          } else if (lastBpmInfoTrigger) lastBpmInfoTrigger.focus();
+        }
+
+        var ageError = document.getElementById("ageError");
+        var rhrError = document.getElementById("rhrError");
+        var mhrError = document.getElementById("mhrError");
+        var genreError = document.getElementById("genreError");
+
+        function mhrFieldProvided() {
+          return String(mhrInput.value || "").trim() !== "";
+        }
+
+        /** Hunt-only when max HR is left blank; overlap (Karvonen vs HUNT) when user enters max HR. */
+        function getMethod() {
+          return mhrFieldProvided() ? "karvonen" : "hunt";
+        }
+
+        function syncMhrVisibility() {
+          if (mhrBlock) mhrBlock.classList.remove("hidden");
+          if (mhrInput) mhrInput.removeAttribute("required");
+        }
+
+        syncMhrVisibility();
+        [ageInput, rhrInput, mhrInput].forEach(function (input) {
+          input.addEventListener("input", function () {
+            hasStartedPlan = true;
+            markPlanDirtyIfNeeded();
+            syncEntryStateUi();
+          });
+        });
+
+        function showError(el, msg) {
+          el.textContent = msg;
+          el.classList.toggle("visible", Boolean(msg));
+        }
+
+        function validate() {
+          var ok = true;
+          showError(ageError, "");
+          showError(rhrError, "");
+          showError(mhrError, "");
+
+          var age = parseInt(ageInput.value, 10);
+          if (!Number.isFinite(age) || age < 1 || age > 120) {
+            showError(ageError, "Enter an age between 1 and 120.");
+            ok = false;
+          }
+
+          var rhr = parseInt(rhrInput.value, 10);
+          if (!Number.isFinite(rhr) || rhr < 30 || rhr > 120) {
+            showError(rhrError, "Enter resting HR between 30 and 120 BPM.");
+            ok = false;
+          }
+
+          var mhr = null;
+          if (mhrFieldProvided()) {
+            mhr = parseInt(mhrInput.value, 10);
+            if (!Number.isFinite(mhr) || mhr < 80 || mhr > 230) {
+              showError(mhrError, "Enter max HR between 80 and 230 BPM, or leave blank for HUNT estimate.");
+              ok = false;
+            }
+          } else if (ok) {
+            mhr = huntMaxHr(age);
+          }
+
+          if (ok && Number.isFinite(rhr) && Number.isFinite(mhr) && mhr <= rhr + 10) {
+            showError(mhrError, "Max HR should be clearly above resting HR.");
+            ok = false;
+          }
+
+          return ok ? { age: age, rhr: rhr, mhr: mhr } : null;
+        }
+
+        var SHARE_REF_PARAM = "ref";
+        var SHARE_REF_VALUE = "share";
+
+        function urlHasShareAttribution() {
+          try {
+            var v = new URLSearchParams(window.location.search).get(SHARE_REF_PARAM);
+            return (v || "").toLowerCase() === SHARE_REF_VALUE;
+          } catch (err) {
+            return false;
+          }
+        }
+
+        /** Same directory as this page, always `index.html`, no query or hash. */
+        function navigateToCalculatorIndexHtml() {
+          try {
+            var u = new URL(window.location.href);
+            var path = u.pathname;
+            if (path.endsWith("/")) {
+              u.pathname = path + "index.html";
+            } else {
+              var last = path.split("/").pop() || "";
+              if (/\.html?$/i.test(last)) {
+                u.pathname = path.replace(/[^/]+$/, "index.html");
+              } else {
+                u.pathname = path.replace(/\/?$/, "/index.html");
+              }
+            }
+            u.search = "";
+            u.hash = "";
+            window.location.assign(u.href);
+          } catch (err) {
+            window.location.assign("index.html");
+          }
+        }
+
+        function buildResultsSearchParams(data, method, urlOpts) {
+          urlOpts = urlOpts || {};
+          var p = new URLSearchParams();
+          var m = method === "hunt" ? "hunt" : "karvonen";
+          p.set("method", m);
+          p.set("age", String(data.age));
+          p.set("rhr", String(data.rhr));
+          if (m === "karvonen") p.set("mhr", String(data.mhr));
+          if (urlOpts.includeShareAttribution) p.set(SHARE_REF_PARAM, SHARE_REF_VALUE);
+          return p;
+        }
+
+        function replaceUrlWithShareableResults(data, method, renderOpts) {
+          renderOpts = renderOpts || {};
+          var includeRef =
+            renderOpts.shareVisitorUi === true ||
+            (urlHasShareAttribution() && renderOpts.fromSharedUrl === true);
+          try {
+            var u = new URL(window.location.href);
+            u.search = buildResultsSearchParams(data, method, {
+              includeShareAttribution: includeRef,
+            }).toString();
+            history.replaceState(null, "", u.pathname + u.search + u.hash);
+          } catch (err) {}
+        }
+
+        function calculatorUrlForShareText(data, method) {
+          try {
+            var u = new URL(window.location.href);
+            u.search = buildResultsSearchParams(data, method, {
+              includeShareAttribution: true,
+            }).toString();
+            return u.toString();
+          } catch (err) {
+            return "https://zone2foryou.com";
+          }
+        }
+
+        function syncResultsModalFooterMode(visitor) {
+          if (!resultsModalActions || !calculateYoursBtn || !resultsModalBackdrop) return;
+          if (visitor === undefined) visitor = urlHasShareAttribution();
+          resultsModalActions.classList.toggle("actions--share-visitor", visitor);
+          resultsModalBackdrop.classList.toggle("results-modal--share-visitor", visitor);
+          recalculateBtn.hidden = visitor;
+          if (continuePlanBtn) continuePlanBtn.hidden = visitor;
+          calculateYoursBtn.hidden = !visitor;
+        }
+
+        function resetResultsModalFooterToOwner() {
+          if (!resultsModalActions || !calculateYoursBtn || !resultsModalBackdrop) return;
+          resultsModalActions.classList.remove("actions--share-visitor");
+          resultsModalBackdrop.classList.remove("results-modal--share-visitor");
+          recalculateBtn.hidden = false;
+          if (continuePlanBtn) continuePlanBtn.hidden = false;
+          calculateYoursBtn.hidden = true;
+        }
+
+        function openResultsModal() {
+          resultsModalBackdrop.classList.add("open");
+          resultsModalBackdrop.setAttribute("aria-hidden", "false");
+          document.body.style.overflow = "hidden";
+          gaEvent("zoneyou_modal_open", { modal: "results" });
+          requestAnimationFrame(function () {
+            if (calculateYoursBtn && !calculateYoursBtn.hidden) calculateYoursBtn.focus();
+            else if (continuePlanBtn && !continuePlanBtn.hidden) continuePlanBtn.focus();
+            else recalculateBtn.focus();
+          });
+        }
+
+        function closeResultsModal() {
+          resultsModalBackdrop.classList.remove("open");
+          resultsModalBackdrop.setAttribute("aria-hidden", "true");
+          document.body.style.overflow = "";
+          if (resultsModalSheet) resultsModalSheet.setAttribute("aria-labelledby", "resultsHeading");
+          resultsHeading.classList.remove("results-heading--visually-hidden");
+          resetResultsModalFooterToOwner();
+        }
+
+        function clampPercent(value) {
+          return Math.max(0, Math.min(100, value));
+        }
+
+        /** Stagger fade / soft-bounce for results: BPM line, then each spectrum row (Karvonen, HUNT, etc.). */
+        function applyResultsRevealStagger(container) {
+          if (!container) return;
+          var cards = container.querySelectorAll(".results-model-card");
+          var targets = [];
+          var revealDurationMs = 780;
+          var revealStepDelayMs = 190;
+
+          cards.forEach(function (card) {
+            card.classList.remove("results-model-card--final-glow");
+          });
+
+          if (container._resultsGlowTimer) {
+            clearTimeout(container._resultsGlowTimer);
+            container._resultsGlowTimer = null;
+          }
+
+          cards.forEach(function (card) {
+            var bpm = card.querySelector(".results-model-bpm");
+            var spectrumRows = card.querySelectorAll(".results-spectrum-row");
+            if (bpm) {
+              targets.push(bpm);
+            } else if (spectrumRows.length) {
+              var soloTitle = card.querySelector(".results-model-title");
+              if (soloTitle) targets.push(soloTitle);
+            } else {
+              var noteHeading = card.querySelector(".overlap-main-title");
+              var noteBody = card.querySelector(".results-meta");
+              if (noteHeading) targets.push(noteHeading);
+              if (noteBody) targets.push(noteBody);
+            }
+            spectrumRows.forEach(function (row) {
+              targets.push(row);
+            });
+          });
+          targets.forEach(function (el, i) {
+            el.classList.add("results-reveal");
+            el.style.setProperty("--results-reveal-i", String(i));
+          });
+
+          var zone2Heading = container.querySelector(".overlap-main-title");
+          var glowCard = zone2Heading ? zone2Heading.closest(".results-model-card") : cards[0];
+          if (!glowCard) return;
+
+          var revealTotalMs = revealDurationMs + Math.max(targets.length - 1, 0) * revealStepDelayMs;
+          container._resultsGlowTimer = setTimeout(function () {
+            glowCard.classList.remove("results-model-card--final-glow");
+            void glowCard.offsetWidth;
+            glowCard.classList.add("results-model-card--final-glow");
+          }, revealTotalMs + 80);
+        }
+
+        function appendZoneSpectrumRow(host, rowModel, rowOpts) {
+          var ro = rowOpts || {};
+
+          var row = document.createElement("div");
+          row.className = "results-spectrum-row";
+
+          var wrap = document.createElement("div");
+          wrap.className = "zone-spectrum-wrap";
+
+          var labels = document.createElement("div");
+          labels.className = "zone-spectrum-labels";
+          for (var i = 0; i <= 5; i += 1) {
+            var zoneLabel = document.createElement("span");
+            zoneLabel.textContent = "Zone " + i;
+            labels.appendChild(zoneLabel);
+          }
+
+          var track = document.createElement("div");
+          track.className = "zone-spectrum-track";
+          for (var j = 0; j <= 5; j += 1) {
+            var segment = document.createElement("span");
+            segment.className = "zone-spectrum-segment";
+            track.appendChild(segment);
+          }
+
+          var zoneWidthPct = 100 / 6;
+          var zone2LeftPct = 2 * zoneWidthPct;
+          var zone2RightPct = 3 * zoneWidthPct;
+
+          function mapBpmToPctWithinZone2(bpm, z2Low, z2High) {
+            if (!Number.isFinite(bpm)) return zone2LeftPct;
+            if (!Number.isFinite(z2Low) || !Number.isFinite(z2High) || z2High <= z2Low) return zone2LeftPct;
+            var t = (bpm - z2Low) / (z2High - z2Low);
+            return clampPercent(zone2LeftPct + t * (zone2RightPct - zone2LeftPct));
+          }
+
+          var lowPct = zone2LeftPct;
+          var highPct = zone2RightPct;
+
+          if (ro.narrowWithinZone2 && ro.zone2Reference) {
+            var z2r = ro.zone2Reference;
+            lowPct = mapBpmToPctWithinZone2(rowModel.zone.low, z2r.low, z2r.high);
+            highPct = mapBpmToPctWithinZone2(rowModel.zone.high, z2r.low, z2r.high);
+            lowPct = clampPercent(Math.min(lowPct, highPct));
+            highPct = clampPercent(Math.max(lowPct, highPct));
+          }
+
+          var highlight = document.createElement("span");
+          highlight.className = "zone2-highlight";
+          highlight.style.left = lowPct + "%";
+          highlight.style.width = Math.max(highPct - lowPct, 2) + "%";
+          track.appendChild(highlight);
+
+          var callouts = document.createElement("div");
+          callouts.className = "zone2-callouts";
+
+          var lowCallout = document.createElement("span");
+          lowCallout.className = "zone2-callout";
+          lowCallout.style.left = lowPct + "%";
+          lowCallout.innerHTML = "<b>" + rowModel.zone.low + "</b><small>Bottom</small>";
+
+          var highCallout = document.createElement("span");
+          highCallout.className = "zone2-callout";
+          highCallout.style.left = highPct + "%";
+          highCallout.innerHTML = "<b>" + rowModel.zone.high + "</b><small>Top</small>";
+
+          callouts.appendChild(lowCallout);
+          callouts.appendChild(highCallout);
+
+          wrap.appendChild(labels);
+          wrap.appendChild(track);
+          wrap.appendChild(callouts);
+
+          if (rowModel.label) {
+            var rowTitle = document.createElement("div");
+            rowTitle.className = "results-spectrum-row-title";
+            rowTitle.textContent = rowModel.label;
+            row.appendChild(rowTitle);
+          }
+          row.appendChild(wrap);
+          host.appendChild(row);
+        }
+
+        function buildDualModelSpectrumCard(cardOptions) {
+          var opts = cardOptions || {};
+          var rows = opts.rows || [];
+
+          var card = document.createElement("article");
+          card.className = "results-model-card";
+
+          if (opts.cardTitle) {
+            var title = document.createElement("h3");
+            title.className = "results-model-title";
+            title.textContent = opts.cardTitle;
+            card.appendChild(title);
+          }
+          rows.forEach(function (row) {
+            appendZoneSpectrumRow(card, row.model, row.rowOpts);
+          });
+          return card;
+        }
+
+        function buildSpectrumModelCard(model, options) {
+          var opts = options || {};
+
+          var card = document.createElement("article");
+          card.className = "results-model-card";
+
+          if (opts.mode === "note") {
+            var noteTitle = document.createElement("h2");
+            noteTitle.className = "results-label overlap-main-title";
+            noteTitle.id = opts.overlapTitleId || "resultsOverlapHeading";
+            noteTitle.innerHTML = opts.overlapTitleHtml || model.label;
+            var note = document.createElement("p");
+            note.className = "results-meta";
+            note.style.marginTop = "10px";
+            note.textContent = opts.noteText || "";
+            card.appendChild(noteTitle);
+            card.appendChild(note);
+            return card;
+          }
+
+          var title = null;
+          if (opts.overlapMainTitle) {
+            title = document.createElement("h2");
+            title.className = "results-label overlap-main-title";
+            title.id = opts.overlapTitleId || "resultsOverlapHeading";
+            title.innerHTML = opts.overlapTitleHtml || model.label;
+          } else {
+            title = document.createElement("h3");
+            title.className = "results-model-title";
+            title.textContent = model.label;
+          }
+
+          if (!opts.hideBpmRangeLine) {
+            var bpm = document.createElement("p");
+            bpm.className = "results-model-bpm";
+            bpm.innerHTML = '<span>' + model.zone.low + "</span> – <span>" + model.zone.high + "</span> BPM";
+            card.appendChild(bpm);
+          }
+
+          appendZoneSpectrumRow(
+            card,
+            { label: "", zone: model.zone },
+            {
+              narrowWithinZone2: opts.narrowWithinZone2,
+              zone2Reference: opts.zone2Reference,
+            }
+          );
+
+          card.insertBefore(title, card.firstChild);
+          return card;
+        }
+
+        function renderResults(data, options) {
+          var opts = options || {};
+          var reopenFromDashboard = opts.reopenFromDashboard === true;
+          var method =
+            reopenFromDashboard && (latestCalculatedMethod === "hunt" || latestCalculatedMethod === "karvonen")
+              ? latestCalculatedMethod
+              : getMethod();
+          var karvonenZone = karvonenZone2(data.rhr, data.mhr);
+          var models = [];
+          var methodLine = "";
+
+          if (method === "karvonen") {
+            var huntMhr = huntMaxHr(data.age);
+            var huntZone = karvonenZone2(data.rhr, huntMhr);
+            var overlapLow = Math.max(karvonenZone.low, huntZone.low);
+            var overlapHigh = Math.min(karvonenZone.high, huntZone.high);
+            var hasOverlap = overlapLow <= overlapHigh;
+
+            if (hasOverlap) {
+              models.push({
+                label: "Zone2ForYou\u2122 Results (Overlap)",
+                zone: { low: overlapLow, high: overlapHigh },
+                rhr: data.rhr,
+                mhr: data.mhr,
+                cardOptions: {
+                  overlapMainTitle: true,
+                  overlapTitleHtml: "Zone2ForYou&trade; Results (Overlap)",
+                  overlapTitleId: "resultsOverlapHeading",
+                  narrowWithinZone2: true,
+                  zone2Reference: karvonenZone,
+                },
+              });
+            } else {
+              models.push({
+                label: "Zone2ForYou\u2122 Results (Overlap)",
+                cardOptions: {
+                  mode: "note",
+                  overlapTitleHtml: "Zone2ForYou&trade; Results (Overlap)",
+                  overlapTitleId: "resultsOverlapHeading",
+                  noteText:
+                    "No overlap between the Karvonen (entered max HR) and HUNT max HR estimates for these inputs. Treat the two model rows below as separate scenarios.",
+                },
+              });
+            }
+
+            models.push({
+              kind: "dual",
+              cardOptions: {
+                rows: [
+                  { model: { label: "Karvonen (entered max HR)", zone: karvonenZone }, rowOpts: {} },
+                  { model: { label: "HUNT max HR estimate", zone: huntZone }, rowOpts: {} },
+                ],
+              },
+            });
+            resultsHeading.innerHTML = "Results";
+            resultsHeading.classList.add("results-heading--visually-hidden");
+            if (resultsModalSheet) resultsModalSheet.setAttribute("aria-labelledby", "resultsOverlapHeading");
+            methodLine = "Comparison of models based on RHR " + data.rhr + " BPM.";
+          } else {
+            models.push({
+              label: "HUNT max HR estimate",
+              zone: karvonenZone,
+              rhr: data.rhr,
+              mhr: data.mhr,
+              cardOptions: { hideBpmRangeLine: true },
+            });
+            resultsHeading.textContent = "Your Zone 2 (HUNT)";
+            resultsHeading.classList.remove("results-heading--visually-hidden");
+            if (resultsModalSheet) resultsModalSheet.setAttribute("aria-labelledby", "resultsHeading");
+            methodLine = "Max HR from HUNT estimate: " + data.mhr + " BPM (rounded).";
+          }
+
+          resultsModels.textContent = "";
+          models.forEach(function (model) {
+            if (model.kind === "dual") {
+              resultsModels.appendChild(buildDualModelSpectrumCard(model.cardOptions));
+            } else {
+              resultsModels.appendChild(buildSpectrumModelCard(model, model.cardOptions));
+            }
+          });
+
+          resultsMeta.textContent = "";
+          resultsMeta.appendChild(document.createTextNode(methodLine));
+          resultsMeta.appendChild(document.createElement("br"));
+          var karvonenStrong = document.createElement("strong");
+          karvonenStrong.textContent = "Karvonen";
+          resultsMeta.appendChild(karvonenStrong);
+          resultsMeta.appendChild(document.createTextNode(" band in green: 60–70% of HR reserve."));
+          var visitorFooter = opts.shareVisitorUi === true || urlHasShareAttribution();
+
+          if (reopenFromDashboard) {
+            gaEvent("zoneyou_results_reopen", {
+              source: "default_dashboard_zone",
+              calculation_method: method,
+            });
+            syncResultsModalFooterMode(visitorFooter);
+            openResultsModal();
+            requestAnimationFrame(function () {
+              applyResultsRevealStagger(resultsModels);
+            });
+            return;
+          }
+
+          if (opts.fromSharedUrl) {
+            gaEvent("zoneyou_open_shared_link", {
+              calculation_method: method,
+              zone_low: karvonenZone.low,
+              zone_high: karvonenZone.high,
+              visit_attribution: urlHasShareAttribution() ? "share" : "none",
+            });
+          } else {
+            gaEvent("zoneyou_calculate", {
+              calculation_method: method,
+              zone_low: karvonenZone.low,
+              zone_high: karvonenZone.high,
+            });
+          }
+          replaceUrlWithShareableResults(data, method, {
+            fromSharedUrl: opts.fromSharedUrl,
+            shareVisitorUi: opts.shareVisitorUi,
+          });
+          hasStartedPlan = true;
+          latestCalculatedData = data;
+          latestCalculatedMethod = method;
+          latestCalculatedSignature = getInputSignature(method, data);
+          lockedPlaylistGenre = null;
+          playlistPrefsSignature = "";
+          syncPlaylistPrefsFromStorage();
+          syncResultsModalFooterMode(visitorFooter);
+          openResultsModal();
+          requestAnimationFrame(function () {
+            applyResultsRevealStagger(resultsModels);
+          });
+        }
+
+        function tryHydrateResultsFromUrl() {
+          var params;
+          try {
+            params = new URLSearchParams(window.location.search);
+          } catch (e) {
+            return;
+          }
+          if (!params.has("age") || !params.has("rhr")) return;
+
+          var methodParam = (params.get("method") || "").toLowerCase();
+          var method = methodParam === "hunt" ? "hunt" : "karvonen";
+
+          ageInput.value = params.get("age") || "";
+          rhrInput.value = params.get("rhr") || "";
+          if (method === "karvonen") {
+            mhrInput.value = params.get("mhr") || "";
+          } else {
+            mhrInput.value = "";
+          }
+
+          syncMhrVisibility();
+
+          var data = validate();
+          if (!data) return;
+
+          var shareVisitorUi =
+            (params.get(SHARE_REF_PARAM) || "").toLowerCase() === SHARE_REF_VALUE;
+
+          renderResults(data, { fromSharedUrl: true, shareVisitorUi: shareVisitorUi });
+          defaultDashboardSummaryMode = true;
+          hasStartedPlan = false;
+        }
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          if (planFlowMode === "genre") return;
+          var data = validate();
+          if (data) {
+            renderResults(data);
+          } else {
+            var invalidFields = [];
+            if (ageError.classList.contains("visible")) invalidFields.push("age");
+            if (rhrError.classList.contains("visible")) invalidFields.push("rhr");
+            if (mhrError.classList.contains("visible")) invalidFields.push("mhr");
+            gaEvent("zoneyou_validation_error", {
+              fields: invalidFields.join(","),
+            });
+            closeResultsModal();
+          }
+        });
+
+        recalculateBtn.addEventListener("click", function () {
+          gaEvent("zoneyou_recalculate", { source: "results_modal" });
+          closeResultsModal();
+          planFlowMode = "inputs";
+          syncPlanUi();
+          ageInput.focus();
+        });
+
+        if (continuePlanBtn) {
+          continuePlanBtn.addEventListener("click", function () {
+            gaEvent("zoneyou_continue_plan", { source: "results_modal", target: "onboarding" });
+            returnToOnboardingAfterResults();
+          });
+        }
+
+        if (calculateYoursBtn) {
+          calculateYoursBtn.addEventListener("click", function () {
+            gaEvent("zoneyou_calculate_yours_cta", { source: "results_modal" });
+            navigateToCalculatorIndexHtml();
+          });
+        }
+
+        resultsModalBackdrop.addEventListener("click", function (e) {
+          if (e.target === resultsModalBackdrop) {
+            gaEvent("zoneyou_results_dismiss", { dismiss_method: "backdrop" });
+            closeResultsModal();
+            ageInput.focus();
+          }
+        });
+
+        function showToast(msg) {
+          toast.textContent = msg;
+          toast.classList.add("show");
+          clearTimeout(showToast._t);
+          showToast._t = setTimeout(function () {
+            toast.classList.remove("show");
+          }, 2200);
+        }
+
+        function buildZoneYouShareText(data, forcedMethod) {
+          var method = forcedMethod || getMethod();
+          if (method === "karvonen") {
+            var enteredMhr = data.mhr;
+            var huntMhr = huntMaxHr(data.age);
+            var karvonenZ = karvonenZone2(data.rhr, enteredMhr);
+            var huntZ = karvonenZone2(data.rhr, huntMhr);
+            var overlapLow = Math.max(karvonenZ.low, huntZ.low);
+            var overlapHigh = Math.min(karvonenZ.high, huntZ.high);
+            if (overlapLow <= overlapHigh) {
+              return (
+                "Zone2ForYou\u2122 — Zone 2: " +
+                overlapLow +
+                "\u2013" +
+                overlapHigh +
+                " BPM (RHR " +
+                data.rhr +
+                "). Estimate only. " +
+                calculatorUrlForShareText(data, method)
+              );
+            }
+            return (
+              "Zone2ForYou\u2122 — Zone 2: " +
+              karvonenZ.low +
+              "\u2013" +
+              karvonenZ.high +
+              " BPM (RHR " +
+              data.rhr +
+              ", max " +
+              enteredMhr +
+              "). Estimate only. " +
+              calculatorUrlForShareText(data, method)
+            );
+          }
+
+          var z = karvonenZone2(data.rhr, data.mhr);
+          return (
+            "Zone2ForYou\u2122 — Zone 2: " +
+            z.low +
+            "\u2013" +
+            z.high +
+            " BPM (RHR " +
+            data.rhr +
+            ", age " +
+            data.age +
+            "). Estimate only. " +
+            calculatorUrlForShareText(data, method)
+          );
+        }
+
+        function handleShareAction(source) {
+          var data = latestCalculatedData;
+          if (!data) data = validate();
+          if (!data) {
+            showToast("Calculate your results before sharing.");
+            gaEvent("zoneyou_share", { outcome: "validation_failed" });
+            return;
+          }
+          if (source === "default_share_widget") {
+            persistShareResultsOpened();
+          }
+          var method = latestCalculatedMethod || getMethod();
+          var text = buildZoneYouShareText(data, method);
+          var shareData = { title: "Zone2ForYou\u2122", text: text };
+
+          if (navigator.share) {
+            navigator.share(shareData).then(
+              function () {
+                gaEvent("share", {
+                  method: "Web Share API",
+                  content_type: "calculator_result",
+                  item_id: "zone2_range",
+                  source: source || "results_modal",
+                });
+              },
+              function () {
+                gaEvent("zoneyou_share", { outcome: "cancelled_or_failed", method: "Web Share API" });
+              }
+            );
+          } else if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(
+              function () {
+                showToast("Copied to clipboard");
+                gaEvent("share", {
+                  method: "clipboard",
+                  content_type: "calculator_result",
+                  item_id: "zone2_range",
+                  source: source || "results_modal",
+                });
+              },
+              function () {
+                showToast("Could not copy");
+                gaEvent("zoneyou_share", { outcome: "clipboard_denied", method: "clipboard" });
+              }
+            );
+          } else {
+            showToast(text);
+            gaEvent("zoneyou_share", { outcome: "fallback_toast", method: "none" });
+          }
+        }
+
+        defaultHintTriggers.forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            showToast(btn.getAttribute("data-default-hint") || "Hint unavailable.");
+          });
+        });
+
+        if (defaultCalculateBtn) {
+          defaultCalculateBtn.addEventListener("click", function () {
+            defaultDashboardSummaryMode = false;
+            hasStartedPlan = true;
+            planFlowMode = "inputs";
+            syncPlanUi();
+            ageInput.focus();
+            gaEvent("zoneyou_default_dashboard_cta", { cta: "calculate" });
+          });
+        }
+
+        if (defaultRecalculateLink) {
+          defaultRecalculateLink.addEventListener("click", function () {
+            gaEvent("zoneyou_recalculate", { source: "default_dashboard_summary" });
+            defaultDashboardSummaryMode = false;
+            hasStartedPlan = true;
+            planFlowMode = "inputs";
+            syncPlanUi();
+            ageInput.focus();
+          });
+        }
+
+        if (defaultCardZoneRange) {
+          defaultCardZoneRange.addEventListener("click", function () {
+            if (!latestCalculatedData) return;
+            renderResults(latestCalculatedData, { reopenFromDashboard: true });
+          });
+        }
+
+        if (defaultPlaylistPrefsLink) {
+          defaultPlaylistPrefsLink.addEventListener("click", function () {
+            gaEvent("zoneyou_playlist_prefs", { action: "change_genre" });
+            enterGenreFlow();
+          });
+        }
+
+        if (planGenreSubmitBtn) {
+          planGenreSubmitBtn.addEventListener("click", function () {
+            var picked = form.querySelector('input[name="planGenre"]:checked');
+            if (!picked || !picked.value) {
+              showError(genreError, "Choose a genre, or tap Skip.");
+              gaEvent("zoneyou_playlist_prefs", { action: "submit_blocked", reason: "no_selection" });
+              return;
+            }
+            showError(genreError, "");
+            finishGenreFlow(true, picked.value);
+            gaEvent("zoneyou_playlist_prefs", { action: "submit", genre: picked.value });
+          });
+        }
+
+        if (planGenreSkipBtn) {
+          planGenreSkipBtn.addEventListener("click", function () {
+            showError(genreError, "");
+            finishGenreFlow(false, null);
+            gaEvent("zoneyou_playlist_prefs", { action: "skip" });
+          });
+        }
+
+        form.querySelectorAll('input[name="planGenre"]').forEach(function (radio) {
+          radio.addEventListener("change", function () {
+            showError(genreError, "");
+          });
+        });
+
+        if (defaultPlanPlaylistBtn) {
+          defaultPlanPlaylistBtn.addEventListener("click", function () {
+            if (!latestCalculatedData) return;
+            enterGenreFlow();
+            gaEvent("zoneyou_default_dashboard_cta", { cta: "playlist_genre_flow" });
+          });
+        }
+
+        if (defaultLogBtn) {
+          defaultLogBtn.addEventListener("click", function () {
+            openCalendarExportModal();
+          });
+        }
+
+        if (calendarExportModalClose) {
+          calendarExportModalClose.addEventListener("click", function () {
+            gaEvent("zoneyou_modal_close", { modal: "calendar_export", dismiss_method: "button" });
+            setCalendarExportModal(false);
+          });
+        }
+        if (calendarExportModalBackdrop) {
+          calendarExportModalBackdrop.addEventListener("click", function (e) {
+            if (e.target === calendarExportModalBackdrop) {
+              gaEvent("zoneyou_modal_close", { modal: "calendar_export", dismiss_method: "backdrop" });
+              setCalendarExportModal(false);
+            }
+          });
+        }
+        if (calendarExportGoogleBtn) {
+          calendarExportGoogleBtn.addEventListener("click", function () {
+            exportCalendarPlan("google");
+          });
+        }
+        if (calendarExportAppleBtn) {
+          calendarExportAppleBtn.addEventListener("click", function () {
+            exportCalendarPlan("apple");
+          });
+        }
+        if (calendarExportDownloadBtn) {
+          calendarExportDownloadBtn.addEventListener("click", function () {
+            exportCalendarPlan("download");
+          });
+        }
+
+        if (defaultShareBtn) {
+          defaultShareBtn.addEventListener("click", function () {
+            handleShareAction("default_share_widget");
+          });
+        }
+
+        if (defaultDashboardResetBtn) {
+          defaultDashboardResetBtn.addEventListener("click", function () {
+            gaEvent("zoneyou_default_dashboard_cta", { cta: "reset_start_over" });
+            resetStartOverFromDashboard();
+          });
+        }
+
+        function setModal(open) {
+          modalBackdrop.classList.toggle("open", open);
+          modalBackdrop.setAttribute("aria-hidden", open ? "false" : "true");
+          if (open) {
+            gaEvent("zoneyou_modal_open", { modal: "why_zone2" });
+            modalClose.focus();
+          }
+        }
+
+        infoBtn.addEventListener("click", function () {
+          setModal(true);
+        });
+        modalClose.addEventListener("click", function () {
+          gaEvent("zoneyou_modal_close", { modal: "why_zone2", dismiss_method: "button" });
+          setModal(false);
+          infoBtn.focus();
+        });
+        modalBackdrop.addEventListener("click", function (e) {
+          if (e.target === modalBackdrop) {
+            gaEvent("zoneyou_modal_close", { modal: "why_zone2", dismiss_method: "backdrop" });
+            setModal(false);
+            infoBtn.focus();
+          }
+        });
+
+        bpmInfoButtons.forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            lastBpmInfoTrigger = btn;
+            loadProductUrls().then(function (urls) {
+              bpmInfoProductLink.href = pickRandomProductUrl(urls);
+              setBpmInfoModal(true, btn.dataset.bpmHint);
+            });
+          });
+        });
+        bpmInfoModalClose.addEventListener("click", function () {
+          gaEvent("zoneyou_modal_close", { modal: "bpm_info", dismiss_method: "button" });
+          setBpmInfoModal(false);
+        });
+        bpmInfoModalBackdrop.addEventListener("click", function (e) {
+          if (e.target === bpmInfoModalBackdrop) {
+            gaEvent("zoneyou_modal_close", { modal: "bpm_info", dismiss_method: "backdrop" });
+            setBpmInfoModal(false);
+          }
+        });
+
+        bpmInfoProductLink.addEventListener("click", function () {
+          var hostname = "";
+          try {
+            hostname = new URL(bpmInfoProductLink.href, window.location.href).hostname;
+          } catch (err) {}
+          gaEvent("zoneyou_affiliate_link_click", {
+            link_domain: hostname || undefined,
+            outbound: true,
+          });
+        });
+
+        tryHydrateResultsFromUrl();
+        syncPlanUi();
+
+        document.addEventListener("keydown", function (e) {
+          if (e.key !== "Escape") return;
+          if (resultsModalBackdrop.classList.contains("open")) {
+            gaEvent("zoneyou_results_dismiss", { dismiss_method: "escape" });
+            closeResultsModal();
+            ageInput.focus();
+            return;
+          }
+          if (calendarExportModalBackdrop && calendarExportModalBackdrop.classList.contains("open")) {
+            gaEvent("zoneyou_modal_close", { modal: "calendar_export", dismiss_method: "escape" });
+            setCalendarExportModal(false);
+            return;
+          }
+          if (bpmInfoModalBackdrop.classList.contains("open")) {
+            gaEvent("zoneyou_modal_close", { modal: "bpm_info", dismiss_method: "escape" });
+            setBpmInfoModal(false);
+            return;
+          }
+          if (modalBackdrop.classList.contains("open")) {
+            gaEvent("zoneyou_modal_close", { modal: "why_zone2", dismiss_method: "escape" });
+            setModal(false);
+            infoBtn.focus();
+          }
+        });
+      })();
+    </script>
+  </body>
 </html>
